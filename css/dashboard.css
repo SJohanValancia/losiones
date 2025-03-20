@@ -1,0 +1,251 @@
+/* ---- Estilos generales ---- */
+body {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background: linear-gradient(135deg, #1E1E1E, #2A2A72);
+  background-size: 400% 400%;
+  animation: gradientAnimation 10s ease infinite;
+  font-family: Arial, sans-serif;
+}
+
+@keyframes gradientAnimation {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* ---- Barra de navegación ---- */
+.navbar {
+
+  transform: translateX(70px);
+  background-color: #03312E;
+  width: 50%;
+  max-width: 800px;
+  padding: 15px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 20px;
+}
+
+.navbar ul {
+  list-style: none;
+  display: flex;
+  gap: 20px;
+  padding: 0;
+  margin: 0;
+}
+
+.navbar a {
+
+  text-decoration: none;
+  color: white;
+  font-size: 16px;
+  padding: 8px 15px;
+  border-radius: 5px;
+  transition: background-color 0.3s ease;
+}
+
+.navbar a:hover {
+  background-color: #c0b577;
+}
+
+/* ---- Contenedor Principal ---- */
+.container {
+  width: 90%;
+  max-width: 600px;
+  padding: 20px;
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(10px);
+  border-radius: 15px;
+  text-align: center;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+h1, h2 {
+  text-align: center;
+  color: #FFFFFF;
+  text-shadow: 0 0 3px #FFF, 0 0 2px #ffffff, 0 0 9px #879c9c;
+}
+
+/* ---- Formulario ---- */
+.form-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  width: 100%;
+}
+
+form label {
+  font-weight: bold;
+  color: #ffffff;
+  text-align: left;
+}
+
+input, select, button {
+  padding: 10px;
+  font-size: 16px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  width: 100%;
+}
+
+select:focus {
+  border: 2px solid #03312E;
+  outline: none;
+}
+
+/* ---- Botones ---- */
+.buttons {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  
+}
+
+button {
+  background-color: #03312E;
+  color: white;
+  border: none;
+  cursor: pointer;
+  padding: 10px 20px;
+  border-radius: 15px;
+  transition: background-color 0.3s ease;
+  
+}
+
+button:hover {
+  background-color: #0D1117;
+}
+
+/* ---- Lista de categorías/gastos ---- */
+.list-container {
+  margin-top: 20px;
+  width: 100%;
+}
+
+.list-container ul {
+  list-style: none;
+  padding: 0;
+}
+
+.list-container li {
+  background: rgba(255, 255, 255, 0.205);
+  padding: 15px;
+  margin-bottom: 10px;
+  border-radius: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  color: black;
+}
+
+.list-container li .buttons-container {
+  display: flex;
+  gap: 8px; /* Espacio entre los botones */
+}
+
+.list-container li button {
+  padding: 6px 12px; /* Botones más pequeños */
+  font-size: 14px; /* Texto más pequeño */
+  border-radius: 20px; /* Bordes redondeados */
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+/* Estilos específicos para cada botón */
+.list-container li .info {
+  background-color: #007bff; /* Azul */
+  border-radius: 15px;
+  color: white;
+}
+
+.list-container li .edit {
+  background-color: #03312E;
+  color: white;
+}
+
+.list-container li .delete {
+  background-color: #dc3545; /* Rojo */
+  color: white;
+}
+
+/* Efecto hover */
+.list-container li button:hover {
+  opacity: 0.8;
+}
+
+
+/* ---- Inputs con animación ---- */
+.wave-group {
+  position: relative;
+  width: 100%;
+}
+
+.wave-group .input {
+  font-size: 16px;
+  padding: 10px;
+  width: 100%;
+  border: none;
+  border-bottom: 3px solid #515151;
+  background: transparent;
+  color: white;
+}
+
+.wave-group .input:focus {
+  outline: none;
+}
+
+.wave-group .label {
+  color: white;
+  font-size: 18px;
+  position: absolute;
+  pointer-events: none;
+  left: 10px;
+  top: 10px;
+  transition: all 0.2s ease-out;
+}
+
+.wave-group .input:focus ~ .label,
+.wave-group .input:valid ~ .label {
+  transform: translateY(-20px);
+  font-size: 14px;
+  color: #ffffff;
+}
+
+.wave-group .bar {
+  display: block;
+  width: 100%;
+  position: relative;
+}
+
+#saleDate {
+  color: white;
+}
+
+
+
+.info.btn {
+  background-color: #5daedd;/* Azul */
+  border: none;
+  padding: 8px 12px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.info.btn:hover {
+  background-color: #2980b9; /* Azul más oscuro al pasar el mouse */
+}
