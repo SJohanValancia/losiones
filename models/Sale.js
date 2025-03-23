@@ -1,5 +1,17 @@
 const mongoose = require("mongoose");
 
+const PaymentSchema = new mongoose.Schema({
+    amount: {
+        type: Number,
+        required: true
+    },
+    date: {
+        type: Date,
+        required: true,
+        default: Date.now
+    }
+});
+
 const SaleSchema = new mongoose.Schema({
     clientName: {
         type: String,
@@ -20,18 +32,24 @@ const SaleSchema = new mongoose.Schema({
         required: true
     },
     installments: {
-        type: Number,
+        type: String,
         default: 1
     },
-    advancePayment: {
-        type: Number,
-        default: 0
-    },
+    payments: [PaymentSchema],
     user: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "User",
         required: true
     }
 }, { timestamps: true });
+
+// Método virtual para calcular el total abonado
+SaleSchema.virtual('totalPaid').get(function() {
+    return this.payments.reduce((sum, payment) => sum + payment.amount, 0);
+});
+
+// Asegurarse de que los virtuals se incluyan cuando el documento se convierte a JSON
+SaleSchema.set('toJSON', { virtuals: true });
+SaleSchema.set('toObject', { virtuals: true });
 
 module.exports = mongoose.model("Sale", SaleSchema);

@@ -12,13 +12,22 @@ router.post("/new", auth, async (req, res) => {
             return res.status(400).json({ error: "Todos los campos son obligatorios" });
         }
 
+        const payments = [];
+        // Si hay un abono inicial, lo agregamos
+        if (advancePayment && advancePayment > 0) {
+            payments.push({
+                amount: advancePayment,
+                date: new Date()
+            });
+        }
+
         const sale = new Sale({
             clientName,
             productName,
             saleDate,
             price,
             installments,
-            advancePayment,
+            payments,
             user: req.user.id
         });
 
@@ -41,22 +50,54 @@ router.get("/", auth, async (req, res) => {
 
 // 🟠 Actualizar una venta
 router.put("/:id", auth, async (req, res) => {
-    const { clientName, productName, saleDate, price, installments, advancePayment } = req.body;
+    const { clientName, productName, saleDate, price, installments } = req.body;
 
     try {
-        const sale = await Sale.findOneAndUpdate(
-            { _id: req.params.id, user: req.user.id },
-            { clientName, productName, saleDate, price, installments, advancePayment },
-            { new: true, runValidators: true }
-        );
+        const sale = await Sale.findOne({ _id: req.params.id, user: req.user.id });
 
         if (!sale) {
             return res.status(404).json({ error: "Venta no encontrada" });
         }
 
+        // Actualizamos los datos básicos
+        sale.clientName = clientName;
+        sale.productName = productName;
+        sale.saleDate = saleDate;
+        sale.price = price;
+        sale.installments = installments;
+
+        await sale.save();
         res.json(sale);
     } catch (error) {
         res.status(500).json({ error: "Error al actualizar la venta" });
+    }
+});
+
+// 🟢 Agregar un nuevo abono
+router.post("/:id/payment", auth, async (req, res) => {
+    const { amount, date } = req.body;
+
+    if (!amount || amount <= 0) {
+        return res.status(400).json({ error: "El monto del abono debe ser mayor a cero" });
+    }
+
+    try {
+        const sale = await Sale.findOne({ _id: req.params.id, user: req.user.id });
+
+        if (!sale) {
+            return res.status(404).json({ error: "Venta no encontrada" });
+        }
+
+        // Agregamos el nuevo abono
+        sale.payments.push({
+            amount,
+            date: date || new Date()
+        });
+
+        await sale.save();
+        res.json(sale);
+    } catch (error) {
+        res.status(500).json({ error: "Error al agregar el abono" });
     }
 });
 
