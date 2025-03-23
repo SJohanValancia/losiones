@@ -1,6 +1,6 @@
 const express = require("express");
 const auth = require("../middleware/auth");
-const Sale = require("../models/Sale");
+const Sale = require("../models/sale");
 const router = express.Router();
 
 // 🟢 Crear nueva venta
@@ -8,17 +8,18 @@ router.post("/new", auth, async (req, res) => {
     try {
         const { clientName, productName, saleDate, price, installments, advancePayment } = req.body;
 
+        // Log received data for debugging
+        console.log("Datos recibidos en el servidor:", { 
+            clientName, 
+            productName, 
+            saleDate, 
+            price, 
+            installments, 
+            advancePayment 
+        });
+
         if (!clientName || !productName || !saleDate || !price) {
             return res.status(400).json({ error: "Todos los campos son obligatorios" });
-        }
-
-        const payments = [];
-        // Si hay un abono inicial, lo agregamos
-        if (advancePayment && advancePayment > 0) {
-            payments.push({
-                amount: advancePayment,
-                date: new Date()
-            });
         }
 
         const sale = new Sale({
@@ -26,14 +27,15 @@ router.post("/new", auth, async (req, res) => {
             productName,
             saleDate,
             price,
-            installments,
-            payments,
+            installments, // Just pass the value as is, since it's now a text field
+            advancePayment,
             user: req.user.id
         });
 
         await sale.save();
         res.status(201).json(sale);
     } catch (error) {
+        console.error("Error en el servidor:", error);
         res.status(500).json({ error: error.message });
     }
 });

@@ -98,17 +98,24 @@ btnDelete.addEventListener("click", async () => {
 });
 
 async function saveSale() {
+    // Log the value to debug
+    console.log("Valor de installments antes de guardar:", inputInstallments.value);
+    
     const saleData = {
         clientName: inputClient.value.trim(),
         productName: inputProduct.value.trim(),
         saleDate: inputDate.value,
         price: parseFloat(inputPrice.value),
-        installments: parseInt(inputInstallments.value),
+        installments: inputInstallments.value.trim(), // Make sure to trim the value
         advancePayment: parseFloat(inputAdvance.value) || 0
     };
+
+    // Log the complete object to debug
+    console.log("Datos a guardar:", saleData);
     
-    if (Object.values(saleData).some(value => value === "" || value === null || value === undefined)) {
-      alert("Completa todos los campos.");
+    // Check for empty required fields, but handle installments separately
+    if (!saleData.clientName || !saleData.productName || !saleData.saleDate || isNaN(saleData.price)) {
+      alert("Completa todos los campos requeridos.");
       return;
     }
   
@@ -120,24 +127,25 @@ async function saveSale() {
         loadSales();
     } catch (error) {
         console.error("Error al guardar la venta:", error.message);
-        alert("No se pudo guardar la venta.");
+        alert("No se pudo guardar la venta: " + error.message);
     }
 }
-
 async function updateSale() {
     const id = inputId.value;
+    
+    // Log the value to debug
+    console.log("Valor de installments antes de actualizar:", inputInstallments.value);
+    
     const saleData = {
         clientName: inputClient.value.trim(),
         productName: inputProduct.value.trim(),
         saleDate: inputDate.value,
         price: parseFloat(inputPrice.value),
-        installments: parseInt(inputInstallments.value)
+        installments: inputInstallments.value.trim() // Make sure to trim the value
     };
     
-    if (!id || Object.values(saleData).some(value => !value)) {
-        alert("Completa todos los campos.");
-        return;
-    }
+    // Log the complete object to debug
+    console.log("Datos a actualizar:", saleData);
     
     try {
         const token = getToken();
@@ -147,7 +155,7 @@ async function updateSale() {
         loadSales();
     } catch (error) {
         console.error("Error al actualizar la venta:", error.message);
-        alert("No se pudo actualizar la venta.");
+        alert("No se pudo actualizar la venta: " + error.message);
     }
 }
 
