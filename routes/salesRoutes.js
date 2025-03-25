@@ -3,6 +3,9 @@ const auth = require("../middleware/auth");
 const Sale = require("../models/Sale");
 const router = express.Router();
 
+
+
+
 // 🟢 Crear nueva venta
 router.post("/new", auth, async (req, res) => {
     try {

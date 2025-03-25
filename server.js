@@ -13,7 +13,7 @@ app.use(express.json());
 
 // 🟢 Habilitar CORS para permitir peticiones desde el frontend
 app.use(cors({
-    origin: "http://127.0.0.1:5501", // Ajusta según la URL de tu frontend
+    origin: "https://b7d9-181-237-104-83.ngrok-free.app", // Ajusta según la URL de tu frontend
     methods: ["GET", "POST", "PUT", "DELETE"],
     allowedHeaders: ["Content-Type", "Authorization"]
 }));
