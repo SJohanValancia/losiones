@@ -1,5 +1,6 @@
 .container {
   width: 300px;
+  height: 500px;
   padding: 20px;
   background: white;
   border-radius: 10px;
@@ -256,7 +257,7 @@ body {
 #searchInput {
 
   margin-right: -310px;
-  transform: translateY(-200px);
+  transform: translateY(-300px);
   width: 250px;
   padding: 10px;
   font-size: 16px;
