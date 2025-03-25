@@ -1,0 +1,144 @@
+/* Responsive Design Adjustments */
+@media screen and (max-width: 414px) {
+    /* Body and Main Container Adjustments */
+    body {
+      padding: 10px;
+      overflow-x: hidden;
+    }
+  
+    .container {
+      width: 95%;
+      max-width: 100%;
+      padding: 15px;
+      margin: 0 auto;
+      box-sizing: border-box;
+    }
+  
+    /* Navbar Responsiveness */
+    .navbar {
+      width: 100%;
+      max-width: 100%;
+      transform: translateX(0);
+      padding: 10px;
+      margin-bottom: 15px;
+    }
+  
+    .navbar ul {
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+    }
+  
+    .navbar a {
+      width: 100%;
+      text-align: center;
+      display: block;
+    }
+  
+    /* Form and Input Adjustments */
+    .form-container {
+      width: 100%;
+    }
+  
+    form {
+      width: 100%;
+    }
+  
+    .wave-group {
+      width: 100%;
+    }
+  
+    .wave-group .input {
+      width: 100%;
+      transform: translateX(0);
+    }
+  
+    .wave-group .label {
+      left: 0;
+      top: 10px;
+    }
+  
+    /* List Container Adjustments */
+    .list-container li {
+      flex-direction: column;
+      align-items: stretch;
+      padding: 10px;
+    }
+  
+    .list-container li .buttons-container {
+      margin-top: 10px;
+      flex-direction: row;
+      justify-content: center;
+    }
+  
+    .list-container li button {
+      flex-grow: 1;
+      margin: 0 5px;
+    }
+  
+    /* Button Styles */
+    .buttons {
+      flex-direction: column;
+      gap: 10px;
+    }
+  
+    button {
+      width: 100%;
+      padding: 12px;
+    }
+  
+    /* Input Adjustments */
+    input, select {
+      width: 100%;
+      box-sizing: border-box;
+    }
+  
+    /* Search Input */
+    #searchInput {
+      width: 100%;
+      margin-right: 0;
+      transform: translateY(0);
+      margin-bottom: 15px;
+    }
+  
+    /* Sales Box */
+    .sales-box {
+      width: 100%;
+      padding: 15px;
+      margin: 10px auto;
+    }
+  
+    .sale-item {
+      flex-direction: column;
+      align-items: stretch;
+    }
+  
+    .buttons-container {
+      margin-top: 10px;
+      justify-content: center;
+    }
+  
+    .btn {
+      flex-grow: 1;
+      margin: 0 5px;
+    }
+  
+    /* Ensure text doesn't overflow */
+    h1, h2 {
+      font-size: 1.5em;
+      word-wrap: break-word;
+    }
+  }
+  
+  /* Additional Responsive Tweaks */
+  * {
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+  
+  /* Ensure scrolling is smooth and prevent horizontal overflow */
+  html, body {
+    max-width: 100%;
+    overflow-x: hidden;
+    scroll-behavior: smooth;
+  }
