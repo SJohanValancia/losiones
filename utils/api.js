@@ -1,4 +1,4 @@
-const API_URL = "https://programa-losiones-2.onrender.com/api"; // Agrega "/api"
+const API_URL = "http://localhost:3000/api"; // Agrega "/api"
 
 
 export async function apiFetch(endpoint, method = "GET", body = null, token = null) {
