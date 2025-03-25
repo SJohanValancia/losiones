@@ -1,6 +1,6 @@
 .container {
   width: 300px;
-  height: 500px;
+
   padding: 20px;
   background: white;
   border-radius: 10px;
@@ -253,11 +253,32 @@ body {
   transform: scale(1.05);
 }
 
+#historial{
+
+  transform: translateX(20px);
+  width: 310px;
+  height: 400px;
+  padding: 20px;
+  background: white;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  max-width: 600px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 15px;
+  text-align: center;
+  backdrop-filter: blur(10px);
+  border-radius: 20px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  overflow-y: auto;
+  max-height: 100vh; /* Evita que crezca más allá de la pantalla */
+
+}
 
 #searchInput {
 
-  margin-right: -310px;
-  transform: translateY(-300px);
+  margin-right: -300px;
+  transform: translateY(-260px);
   width: 250px;
   padding: 10px;
   font-size: 16px;
@@ -273,3 +294,74 @@ body {
   box-shadow: 2px 2px 8px rgba(0, 123, 255, 0.3);
 }
 
+@media screen and (max-width: 414px) {
+  /* Body and Main Container Adjustments */
+
+
+
+
+
+  .list-container li button {
+    flex-grow: 1;
+    margin: 0 5px;
+  }
+
+  /* Button Styles */
+  .buttons {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  button {
+    width: 100%;
+    padding: 12px;
+  }
+
+  /* Input Adjustments */
+  input, select {
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+
+  /* Sales Box */
+  .sales-box {
+    width: 100%;
+    padding: 15px;
+    margin: 10px auto;
+  }
+
+  .sale-item {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .buttons-container {
+    margin-top: 10px;
+    justify-content: center;
+  }
+
+  .btn {
+    flex-grow: 1;
+    margin: 0 5px;
+  }
+
+  /* Ensure text doesn't overflow */
+  h1, h2 {
+    font-size: 1.5em;
+    word-wrap: break-word;
+  }
+}
+
+/* Additional Responsive Tweaks */
+* {
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+/* Ensure scrolling is smooth and prevent horizontal overflow */
+html, body {
+  max-width: 100%;
+  overflow-x: hidden;
+  scroll-behavior: smooth;
+}
