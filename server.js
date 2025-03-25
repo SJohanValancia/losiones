@@ -13,7 +13,7 @@ app.use(express.json());
 
 // 🟢 Habilitar CORS para permitir peticiones desde el frontend
 app.use(cors({
-    origin: "https://1167-181-237-104-83.ngrok-free.app", // Ajusta según la URL de tu frontend
+    origin: "https://programa-losioines.netlify.app/", // Ajusta según la URL de tu frontend
     methods: ["GET", "POST", "PUT", "DELETE"],
     allowedHeaders: ["Content-Type", "Authorization"]
 }));
