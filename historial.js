@@ -42,7 +42,9 @@ function displaySales(salesList) {
     salesHistory.innerHTML = ""; // Limpiar antes de actualizar
 
     salesList.forEach((sale) => {
-        const remainingDebt = sale.price - sale.advancePayment;
+        const totalPaid = sale.totalPaid || (sale.payments ? sale.payments.reduce((sum, payment) => sum + payment.amount, 0) : 0);
+        const remainingDebt = sale.price - totalPaid;
+
         const li = document.createElement("li");
         li.classList.add("sale-item");
 
@@ -62,7 +64,6 @@ function displaySales(salesList) {
         salesHistory.appendChild(li);
     });
 }
-
 function viewSaleDetails(sale) {
     localStorage.setItem("saleDetails", JSON.stringify(sale));
     window.location.href = "saleDetails.html";
