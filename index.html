@@ -1,56 +1,486 @@
 <!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Iniciar Sesión - Administrador de Gastos</title>
-    <link rel="stylesheet" href="css/styles.css" />
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Farmacia villa cecilia </title>
+
+</head>
+<style>
+    body, html {
+        margin: 0; /* Elimina los márgenes predeterminados del navegador */
+        padding: 0; /* Elimina los espacios internos */
+        height: 100%; /* La página ocupa toda la altura */
+    }
     
-  </head>
-  <body>
-    <div class="container">
-      <h1>Iniciar Sesión</h1>
-      <form id="loginForm">
-        <div class="wave-group">
-          <input id="loginEmail"required="" type="email" class="input">
-          <span class="bar"></span>
-          <label  class="label">
+    /* Contenedor principal */
+    .contenedor {
+        position: relative; /* Permite posicionar elementos hijos de forma absoluta */
+        height: 100vh; /* Altura del contenedor igual a la pantalla completa */
+    }
+    
+    /* Imagen */
+    img {
+        position: absolute; /* Permite mover la imagen dentro del contenedor */
+        top: 5%; /* Mueve la imagen hacia abajo un 5% desde la parte superior */
+        left: 5%; /* Mueve la imagen hacia la derecha un 5% desde el borde izquierdo */
+        width: 100px; /* Ajusta el tamaño de la imagen a 100 píxeles de ancho */
+        height: auto; /* Mantiene la proporción original de la imagen */
+    }
+    
+    .contacto{
+    
+    
+    margin-right: -50px;
+    
+    }
+    
+    
+    :root {
+        --color-primary: #2C5E2E;
+        --color-secondary: #54cfff;
+        --color-background: #99d8e7;
+        --color-text: #4CAF50;
+    }
+    
+    body {
+        font-family: 'Nunito', sans-serif;
+        margin: 0;
+        padding: 0;
+        background: linear-gradient(to bottom right, #a1c6ea, #ffffff);
+        height: 100vh; /* Asegura que cubra toda la altura de la ventana */
+        margin: 0;
+        margin-left: 70px;
+        min-height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        overflow-x: hidden;
+    }
+    
+    .container {
+        width: 90%;
+        max-width: 600px;
+        background-color: transparent;
+    }
+    
+    .section {
+        background-color: rgb(209, 247, 245);
+        border: 2px solid var(--color-secondary);
+        border-radius: 12px;
+        padding: 20px;
+        margin-bottom: 20px;
+        display: flex;
+        align-items: center;
+        transform: translateX(-100%);
+        opacity: 0;
+        transition: transform 0.7s ease, opacity 0.7s ease;
+        position: relative;
+        cursor: pointer;
+    }
+    
+    .section.visible {
+        transform: translateX(0);
+        opacity: 1;
+    }
+    
+    .section-icon {
+        background-color: #E8F5E9;
+        color: var(--color-primary);
+        border-radius: 50%;
+        width: 60px;
+        height: 60px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-right: 20px;
+    }
+    
+    .section-content h2 {
+        color: var(--color-primary);
+        margin: 0 0 10px 0;
+    }
+    
+    .section-content p {
+        color: var(--color-text);
+        margin: 0;
+    }
+    
+    .title {
+        text-align: center;
+        color: var(--color-primary);
+        margin-bottom: 40px;
+    }
+    
+    .villaCecilia {
+        font-size: 80px;
+        color: #d8ddd8;
+        text-shadow: 
+            -2px -2px 0 #ffffff,  
+            2px -2px 0 #0a1d0a,   
+            -2px 2px 0 #aac0aa,   
+            2px 2px 0 #272e27,    
+            0 0 10px #00FF00,     
+            0 0 20px #00FF00,     
+            0 0 40px #87c6d1;     
+        letter-spacing: 4px;
+        animation: flicker 2s infinite alternate;
+    }
+    
+    @keyframes flicker {
+        0%, 18%, 22%, 25%, 53%, 57%, 100% {
+            text-shadow: 
+                -2px -2px 0 #46ffd1,
+                2px -2px 0 #b1b1b1,
+                -2px 2px 0 #61c5ff,
+                2px 2px 0 #928ce5,
+                0 0 10px #4a75ad,
+                0 0 20px #1671e9,
+                0 0 40px #00e1ff;
+        }
+        20%, 24%, 55% {
+            text-shadow: none;
+        }
+    }
+    
+    .detail-box {
+        display: none;
+        background-color: rgba(255,255,255,0.95);
+        border: 2px solid var(--color-secondary);
+        border-radius: 12px;
+        padding: 20px;
+        margin-left: -80px;
+        margin-top: 10px;
+        transform-origin: top;
+        transition: all 0.3s ease;
+    }
+    
+    .section.active .detail-box {
+        display: block;
+        animation: slideDown 0.3s ease;
+    }
+    
+    @keyframes slideDown {
+        from {
+            opacity: 0;
+            transform: scaleY(0);
+        }
+        to {
+            opacity: 1;
+            transform: scaleY(1);
+        }
+    }
+    
+    .sections-container {
+        transition: margin-bottom 0.3s ease;
+    }
+    
+    .section.active + .section {
+        margin-top: 20px;
+    }
+    
+        /* Estilos del botón */
+    .boton-agregar {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    padding: 15px;
+    font-size: 24px;
+    border-radius: 50%;
+    cursor: pointer;
+    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.3);
+    transition: background 0.3s;
+    }
+    
+    .boton-agregar:hover {
+    background-color: #388E3C;
+    }
 
-            <span class="label-char" style="--index: 0">E</span>
-            <span class="label-char" style="--index: 1">m</span>
-            <span class="label-char" style="--index: 2">a</span>
-            <span class="label-char" style="--index: 3">i</span>
-            <span class="label-char" style="--index: 3">l</span> 
+        /* Estilo general */
+body {
+    font-family: Arial, sans-serif;
+    background: linear-gradient(to bottom right, #a1c6ea, #ffffff);
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0;
+}
+
+/* Contenedor del formulario */
+.contenedor {
+    background: #49a8c5;
+    height: 300px;
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+    width: 350px;
+    text-align: center;
+}
+
+/* Título */
+.title {
+    font-size: 24px;
+    margin-bottom: 15px;
+    color: #ffffff;
+}
+
+/* Grupo de formulario */
+.form-group {
+    margin-bottom: 15px;
+    text-align: left;
+}
+
+/* Etiquetas */
+.form-group label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 5px;
+    color: #ffffff;
+}
+
+/* Campos de entrada */
+.input, .textarea, .file-input {
+    transform: translateX(-10px);
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #bdc3c7;
+    border-radius: 5px;
+    font-size: 14px;
+    transition: all 0.3s ease-in-out;
+}
+
+/* Área de texto */
+.textarea {
+    height: 80px;
+    resize: none;
+}
+
+/* Efecto hover en inputs */
+.input:focus, .textarea:focus {
+    border-color: #2980b9;
+    box-shadow: 0px 0px 5px rgba(41, 128, 185, 0.5);
+    outline: none;
+}
+
+/* Botón */
+.btn {
+    background: #3498db;
+    color: white;
+    border: none;
+    padding: 12px;
+    width: 100%;
+    font-size: 16px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+/* Efecto hover en el botón */
+.btn:hover {
+    background: #2980b9;
+    transform: scale(1.05);
+}
+
+@media only screen and (max-width: 828px) {  
+  .container {  
+      width: 95%;  
+      max-width: 300px;  
+      padding: 3px;
+  }  
+
+  .villaCecilia {  
+      font-size: 40px;  
+      letter-spacing: 2px;  
+  }  
+
+  .section {  
+      flex-direction: column;  
+      text-align: center;  
+      padding: 15px;
+  }  
+
+  .section-icon {  
+      width: 50px;  
+      height: 50px;  
+      margin-right: 0;
+      margin-bottom: 10px;
+  }  
+
+  .boton-agregar {  
+      top: 10px;  
+      right: 10px;  
+      padding: 10px;  
+      font-size: 20px;  
+  }  
+
+  img {  
+      width: 80px;  
+      top: 2%;  
+      left: 2%;
+  }
+
+  .contenedor {  
+      width: 90%;  
+      height: auto;  
+      padding: 20px;
+  }
+
+  .input, .textarea, .file-input {  
+      font-size: 16px;  
+  }  
+
+  .btn {  
+      font-size: 18px;  
+  }  
+}
 
 
-          </label>
- 
-        </div>
-        <div class="wave-group">
-          <input id="loginPassword"required="" type="password" class="input">
-          <span class="bar"></span>
-          <label  class="label">
+</style>
+<body>
 
-            <span class="label-char" style="--index: 0">C</span>
-            <span class="label-char" style="--index: 1">o</span>
-            <span class="label-char" style="--index: 2">n</span>
-            <span class="label-char" style="--index: 3">t</span>
-            <span class="label-char" style="--index: 3">r</span> 
-            <span class="label-char" style="--index: 3">a</span>
-            <span class="label-char" style="--index: 3">s</span>
-            <span class="label-char" style="--index: 3">e</span>
-            <span class="label-char" style="--index: 3">ñ</span>
-            <span class="label-char" style="--index: 3">a</span>
+    <div id="todo" >
 
-          </label>
- 
-        </div>
-        <center>
-        <button class="login" type="submit">Iniciar Sesión</button>
-    </center>
-      </form>
-      <p>¿No tienes cuenta? <a href="register.html">Regístrate aquí</a>.</p>
+        <button id="agregar" class="boton-agregar">+</button>
+
+
+    <div class="farmacia_img">
+        <img src="farmacenter img.jpeg" alt="Imagen de la farmcia ">
     </div>
-    <script src="login.js" type="module"></script>
-  </body>
+
+    <div class="container">
+        <center>
+            <h1 class="villaCecilia">FARMACIA 
+                villa cecilia 
+            </h1>
+            <div id="sections-container">
+                <div class="section" data-icon="💊" data-title="Productos" data-description="productos  ">
+                    <div class="section-icon">💊</div>
+                    <div class="section-content">
+                        <a id="farmacos" href="farmacos.html ">  <h2>Productos</h2>
+                      
+                        <p>descubre todos nuestros medicamentos para que puedas sanarte </p></a>
+                    </div>
+                    
+                </div>
+
+                
+                <div class="section" data-icon="📞" data-title="contactar" data-description="numero">
+                    <div class="section-icon">📞</div>
+                    <div class="section-content">
+
+                        <h2>Contáctenos</h2>
+                        <p>comunìquese con la farmacia villa cecilia </p>
+                    </div>
+                    <div class="detail-box">
+                        <h3>Información de Contacto</h3>
+                     <a href="https://wa.me/+573225949495?text=Hola,%20quiero%20más%20información" target="_blank">Teléfono:  3225949495 <br></a>
+                    <p><a href="mailto:kar.va.va.va@gmail.com?subject=Consulta&body=Hola,%20tengo%20una%20pregunta...">correo electronico: correogmail.com</a></p>
+                        <p>Dirección: xxxxxxxx</p>
+                    </div>
+                </div>
+                <div class="section" data-icon="📅" data-title="horarios" data-description="atención ">
+                    <div class="section-icon">📅</div>
+                    <div class="section-content">
+                        <h2>Horarios</h2>
+                        <p>Averigua nuestros horarios de atención</p>
+                    </div>
+                    <div class="detail-box">
+                        <h2>disponibilidad</h2>
+                        <p>de lunes a viernes estamos disponibles para solucionarte cualquier duda de </p>
+                        <p>6:00 A.M hasta las 6:00 P.M</p>
+                        <p> los sábados estamos disponibles para tí de </p>
+                        <p>7:00 A.M hasta la 1:00 P.M</p>
+                    </div>
+                </div>
+            </div>
+       
+    </div>
+</div>
+
+
+<div id="usuario" class="contenedor" style="display: none;" >
+    <h2 class="title">Porfavor llena</h2>
+   
+        <div class="form-group">
+            <label>¿Quien esta entrando?:</label>
+            <input type="text" id="nombre" required class="input">
+        </div>
+
+        <div class="form-group">
+            <label>contraseña:</label>
+            <input type="password" id="contra" required class="input">
+        </div>
+        
+            <button onclick="confirmar()" id="confirmar" class="btn">CONFIRMAR</button>
+        
+
+        <p id="denegado" ></p>
+</div>
+
+    </center>
+
+    <script>
+
+        function confirmar(){
+
+            const contraseña = document.getElementById("contra").value;
+            const usuario = document.getElementById("nombre").value;
+            const nombre = "johan valencia"
+            const contra = "johan valencia"
+
+            if(usuario === nombre  && contraseña === contra){
+
+                window.location.href="formulario.html"
+
+            }else{
+
+                document.getElementById("denegado").innerHTML = `usted no tiene autorizacion para hacer esta funcion `
+
+            }
+        }
+
+        document.getElementById("agregar").addEventListener("click", () => {
+
+            document.getElementById("usuario").style.display="block"
+            document.getElementById("todo").style.display="none"
+
+        });
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const sections = document.querySelectorAll('.section');
+            
+            sections.forEach((section, index) => {
+                setTimeout(() => {
+                    section.classList.add('visible');
+                }, index * 500);
+
+                // Evento para expandir/contraer secciones
+                section.addEventListener('click', () => {
+                    // Cerrar otras secciones activas
+                    sections.forEach(s => {
+                        if (s !== section) {
+                            s.classList.remove('active');
+                        }
+                    });
+
+                    // Alternar la sección actual
+                    section.classList.toggle('active');
+                });
+
+                // Evento hover para mostrar detalles
+                section.addEventListener('mouseenter', () => {
+                    section.classList.add('hover');
+                });
+
+                section.addEventListener('mouseleave', () => {
+                    section.classList.remove('hover');
+                });
+            });
+        });
+    </script>
+</body>
 </html>

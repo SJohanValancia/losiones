@@ -1,5 +1,4 @@
-const API_URL = "https://losiones-1.onrender.com/api"; // Agrega "/api"
-
+const API_URL = "http://localhost:5000/api"
 
 export async function apiFetch(endpoint, method = "GET", body = null, token = null) {
     const headers = { "Content-Type": "application/json" };
@@ -10,23 +9,28 @@ export async function apiFetch(endpoint, method = "GET", body = null, token = nu
     }
 
     try {
+        console.log(`Realizando petición a: ${API_URL}${endpoint}`);
+        
         const response = await fetch(`${API_URL}${endpoint}`, {
             method,
             headers,
             body: body ? JSON.stringify(body) : null,
         });
 
-        // Si la respuesta no es JSON válido, manejarlo antes de intentar parsearlo
+        // Intenta obtener la respuesta JSON
+        let data;
         const contentType = response.headers.get("content-type");
-        if (!contentType || !contentType.includes("application/json")) {
+        if (contentType && contentType.includes("application/json")) {
+            data = await response.json();
+        } else {
             const text = await response.text();
-            throw new Error(`Error inesperado: ${text}`);
+            console.warn("Respuesta no JSON:", text);
+            data = { message: text };
         }
 
-        const data = await response.json();
-
+        // Si la respuesta no es exitosa, lanza un error
         if (!response.ok) {
-            throw new Error(data.error || "Error en la solicitud");
+            throw new Error(data.error || data.message || "Error en la solicitud");
         }
 
         return data;

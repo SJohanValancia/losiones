@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Administración de Productos</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(to bottom right, #a1c6ea, #ffffff);
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            background: #fff;
+            padding: 1px;
+            border-radius: 10px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+            margin: 0 auto 20px auto;
+        }
+        .title {
+            font-size: 22px;
+            margin-bottom: 15px;
+            color: #2c3e50;
+        }
+        .form-group {
+            margin-bottom: 15px;
+            text-align: left;
+        }
+        .form-group label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 5px;
+            color: #34495e;
+        }
+        .input, .textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #bdc3c7;
+            border-radius: 5px;
+            font-size: 14px;
+            transition: all 0.3s ease-in-out;
+        }
+        .textarea {
+            height: 80px;
+            resize: none;
+        }
+        .input:focus, .textarea:focus {
+            border-color: #2980b9;
+            box-shadow: 0px 0px 5px rgba(41, 128, 185, 0.5);
+            outline: none;
+        }
+        .btn {
+            background: #3498db;
+            color: white;
+            border: none;
+            padding: 12px;
+            width: 100%;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: 0.3s;
+            margin-bottom: 10px;
+        }
+        .btn:hover {
+            background: #2980b9;
+            transform: scale(1.05);
+        }
+        .product-list {
+            margin-top: 20px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            padding: 10px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .product-card {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.2);
+        }
+        .product-card img {
+            width: 100%;
+            height: 150px;
+            object-fit: cover;
+            border-radius: 5px;
+            margin-bottom: 10px;
+        }
+        .product-card h3 {
+            font-size: 16px;
+            margin: 10px 0;
+            color: #2c3e50;
+        }
+        .product-card p {
+            font-size: 14px;
+            color: #555;
+            margin-bottom: 10px;
+        }
+        .product-card .btn-small {
+            background: #3498db;
+            color: white;
+            border: none;
+            padding: 8px;
+            font-size: 14px;
+            border-radius: 5px;
+            cursor: pointer;
+            width: 48%;
+            margin-top: 5px;
+            display: inline-block;
+        }
+        .buttons-container {
+            display: flex;
+            justify-content: space-between;
+        }
+        .back-button {
+            background: #f39c12;
+            margin-top: 20px;
+            max-width: 200px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .preview-container {
+            width: 100%;
+            max-width: 200px;
+            height: 120px;
+            border: 2px dashed #bdc3c7;
+            margin: 10px auto;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-size: cover;
+            background-position: center;
+        }
+        #imagen {
+            display: none;
+        }
+        .custom-file-upload {
+            border: 1px solid #ccc;
+            display: inline-block;
+            padding: 6px 12px;
+            cursor: pointer;
+            background: #f8f9fa;
+            border-radius: 4px;
+            margin-top: 5px;
+            width: 100%;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2 class="title">Administración de Productos</h2>
+        <form id="formulario">
+            <div class="form-group">
+                <label>Nombre:</label>
+                <input type="text" id="nombre" required class="input" placeholder="Ej: Paracetamol">
+            </div>
+            <div class="form-group">
+                <label>Descripción:</label>
+                <textarea id="descripcion" required class="textarea" placeholder="Ej: Analgésico para dolor y fiebre"></textarea>
+            </div>
+            <div class="form-group">
+                <label>Palabra Clave:</label>
+                <input type="text" id="clave" required class="input" placeholder="Ej: dolor, fiebre, gripe">
+            </div>
+            <div class="form-group">
+                <label>Imagen:</label>
+                <div id="preview" class="preview-container">
+                    <span id="preview-text">Vista previa</span>
+                </div>
+                <label for="imagen" class="custom-file-upload">
+                    Seleccionar Imagen
+                </label>
+                <input type="file" id="imagen" accept="image/*" class="file-input">
+            </div>
+            <div class="form-group">
+                <label>Precio:</label>
+                <input type="number" id="precio" step="0.01" required class="input" placeholder="Ej: 15000">
+            </div>
+            <button type="submit" class="btn">Guardar Producto</button>
+        </form>
+        <button class="btn back-button" onclick="window.location.href='index.html'">Volver al Inicio</button>
+    </div>
+    
+    <h2 class="title" style="text-align: center; margin-top: 30px;">Lista de Productos</h2>
+    <div class="product-list" id="productList"></div>
+    
+    <script type="module" src="productos.js"></script>
+    <script>
+        // Vista previa de la imagen seleccionada
+        document.getElementById('imagen').addEventListener('change', function(e) {
+            const preview = document.getElementById('preview');
+            const previewText = document.getElementById('preview-text');
+            
+            if (e.target.files && e.target.files[0]) {
+                const reader = new FileReader();
+                
+                reader.onload = function(event) {
+                    preview.style.backgroundImage = `url(${event.target.result})`;
+                    previewText.style.display = 'none';
+                }
+                
+                reader.readAsDataURL(e.target.files[0]);
+            } else {
+                preview.style.backgroundImage = '';
+                previewText.style.display = 'block';
+            }
+        });
+    </script>
+</body>
+</html>

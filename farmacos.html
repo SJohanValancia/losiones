@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PRODUCTOS</title>
+    <style>
+        body {
+            background: linear-gradient(to bottom right, #a1c6ea, #ffffff);
+            margin: 0;
+            font-family: Arial, sans-serif;
+        }
+        .container {
+            max-width: 95%;
+            margin: 0 auto;
+            padding: 10px;
+            text-align: center;
+        }
+        h1, h2 {
+            color: #2c3e50;
+            font-size: 1.5rem;
+        }
+        #buscar {
+            width: 90%;
+            max-width: 300px;
+            padding: 10px;
+            font-size: 16px;
+            border: 2px solid #3498db;
+            border-radius: 20px;
+            outline: none;
+            transition: 0.3s;
+        }
+        #buscar:focus {
+            border-color: #2980b9;
+            box-shadow: 0 0 8px rgba(41, 128, 185, 0.5);
+        }
+        .productos {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 15px;
+            padding: 10px;
+        }
+        .producto {
+            background-color: #fff;
+            width: 100%;
+            max-width: 250px;
+            text-align: center;
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+        }
+        .producto img {
+            width: 100%;
+            height: auto;
+            border-radius: 10px;
+        }
+        .producto h3 {
+            font-size: 18px;
+            margin: 10px 0;
+        }
+        .producto p {
+            font-size: 16px;
+            font-weight: bold;
+            color: #27ae60;
+        }
+        .btn-whatsapp {
+            display: inline-block;
+            background: #25D366;
+            color: white;
+            padding: 10px 15px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: bold;
+            transition: 0.3s;
+        }
+        .btn-whatsapp:hover {
+            background: #1ebe5d;
+        }
+        .loader {
+            text-align: center;
+            font-size: 16px;
+            margin: 20px;
+            display: none;
+        }
+
+        /* Estilos para iPhone 11 (ancho: 414px) */
+        @media (max-width: 430px) {
+            h1, h2 {
+                font-size: 1.2rem;
+            }
+            .producto {
+                max-width: 90%;
+            }
+            .btn-whatsapp {
+                font-size: 12px;
+                padding: 8px 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Escribe el síntoma que tienes (Ej: gripa) o qué es lo que sientes (Ej: dolor de cabeza):</h2>
+        <input id="buscar" placeholder="Buscar" type="text">
+        <h1>NUESTROS PRODUCTOS</h1>
+        <div class="productos" id="productos"></div>
+        <div class="loader" id="loader">Cargando productos...</div>
+    </div>
+
+    <script type="module" src="farmacos.js"  >
+
+    </script>
+</body>
+</html>
