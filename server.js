@@ -17,7 +17,6 @@ app.use(cors({
     methods: ["GET", "POST", "PUT", "DELETE"],
     allowedHeaders: ["Content-Type", "Authorization"]
 }));
-
 // Rutas
 app.use("/api/auth", authRoutes);
 app.use("/api/sales", salesRoutes);
