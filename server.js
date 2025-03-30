@@ -13,11 +13,10 @@ app.use(express.json());
 
 // 🟢 Habilitar CORS para permitir peticiones desde el frontend
 app.use(cors({
-    origin: "https://programa-losioines.netlify.app", // Ajusta según la URL de tu frontend
+    origin: ["https://programa-losioines.netlify.app", "http://127.0.0.1:5501"], // Ajusta según la URL de tu frontend
     methods: ["GET", "POST", "PUT", "DELETE"],
     allowedHeaders: ["Content-Type", "Authorization"]
 }));
-
 // Rutas
 app.use("/api/auth", authRoutes);
 app.use("/api/sales", salesRoutes);
