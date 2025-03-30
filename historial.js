@@ -102,3 +102,4 @@ async function deleteSale(id, listItem) {
 function editSale(sale) {
     window.location.href = "categories.html";
 }
+//
