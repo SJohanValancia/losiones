@@ -4,6 +4,7 @@ import { getToken } from "./utils/auth.js";
 document.addEventListener("DOMContentLoaded", async () => {
     const salesHistory = document.getElementById("salesHistory");
     const searchInput = document.getElementById("searchInput");
+    const totalDebtElement = document.getElementById("totalDebt");
     let sales = [];
 
     try {
@@ -11,13 +12,14 @@ document.addEventListener("DOMContentLoaded", async () => {
         sales = await apiFetch("/sales", "GET", null, token);
 
         displaySales(sales);
+        updateTotalDebt(sales);
 
         // Filtrar las ventas mientras se escribe en el campo de búsqueda
         searchInput.addEventListener("input", () => {
             const searchText = searchInput.value.toLowerCase().trim();
 
             if (searchText === "") {
-                displaySales(sales); // Mostrar todas si el input está vacío
+                displaySales(sales);
             } else {
                 const filteredSales = sales.filter(sale => 
                     sale.clientName.toLowerCase().includes(searchText)
@@ -63,7 +65,21 @@ function displaySales(salesList) {
 
         salesHistory.appendChild(li);
     });
+
+    updateTotalDebt(salesList); // Actualizar el total de deudas después de mostrar ventas
 }
+
+function updateTotalDebt(salesList) {
+    const totalDebtElement = document.getElementById("totalDebt");
+
+    const totalDebt = salesList.reduce((sum, sale) => {
+        const totalPaid = sale.totalPaid || (sale.payments ? sale.payments.reduce((sum, payment) => sum + payment.amount, 0) : 0);
+        return sum + (sale.price - totalPaid);
+    }, 0);
+
+    totalDebtElement.textContent = `${totalDebt.toLocaleString()} COP`;
+}
+
 function viewSaleDetails(sale) {
     localStorage.setItem("saleDetails", JSON.stringify(sale));
     window.location.href = "saleDetails.html";
@@ -75,11 +91,11 @@ async function deleteSale(id, listItem) {
     try {
         const token = getToken();
         await apiFetch(`/sales/${id}`, "DELETE", null, token);
-        listItem.remove(); // Eliminar de la lista sin recargar
+        listItem.remove();
         alert("Venta eliminada correctamente.");
     } catch (error) {
         console.error("Error al eliminar la venta:", error);
-        alert("No se pudo eliminar la venta, vuelvalo a intentar.");
+        alert("No se pudo eliminar la venta, vuelva a intentarlo.");
     }
 }
 

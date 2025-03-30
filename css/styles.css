@@ -255,6 +255,8 @@ body {
 
 #historial{
 
+  position: relative;
+  z-index: 1; /* Asegura que esté adelante */
   transform: translateX(20px);
   width: 310px;
   height: 400px;
@@ -364,4 +366,37 @@ html, body {
   max-width: 100%;
   overflow-x: hidden;
   scroll-behavior: smooth;
+}
+
+/* Asegura que el historial y el totalDebtContainer estén en columna */
+.main-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 20px; /* Espacio entre historial y deuda */
+}
+
+#totalDebtContainer {
+  position: absolute; /* Lo mantiene en el flujo normal */
+  text-align: center;
+  font-weight: bold;
+  color: #ff4d4d; /* Rojo elegante */
+  background: rgba(255, 255, 255, 0.15); /* Transparencia */
+  padding: 1px;
+  border-radius: 15px;
+  width: 80%;
+  max-width: 500px;
+  backdrop-filter: blur(10px); /* Efecto de vidrio */
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); /* Sombra suave */
+  border: 1px solid rgba(255, 255, 255, 0.3); /* Borde sutil */
+  margin: 20px auto 0; /* Centrar debajo del historial */
+  font-size: 14px;
+  transition: transform 0.3s ease, background 0.3s ease;
+  transform: translateY(260px);
+}
+
+#totalDebtContainer:hover {
+  transform: scale(1px);
+  background: rgba(255, 255, 255, 0.25);
 }
