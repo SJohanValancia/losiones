@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inventario</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <input type="text" id="searchInput" placeholder="🔍 Buscar producto por nombre..." />
+
+    <div id="inventario" class="container">
+        <nav id="navbar" class="navbar">
+            <ul>
+                <li><a href="categories.html">Registro</a></li>
+                <li><a href="historial.html">Historial</a></li>
+                <li><a href="liquidados.html">Liquidados</a></li>
+                <li><a href="productos.html">Agregar Producto</a></li>
+            </ul>
+        </nav>
+        
+        <h1>Inventario de Productos</h1>
+        <ul id="productsList" class="products-list"></ul>
+    </div>
+
+    <div id="totalProductsContainer">
+        <h2>📦 Total productos: <span id="totalProducts">0</span></h2>
+    </div>
+
+    <script type="module" src="inventario.js"></script>
+</body>
+</html>

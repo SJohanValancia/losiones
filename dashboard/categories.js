@@ -20,33 +20,38 @@ const btnAddPayment = document.getElementById("addPayment");
 const list = document.getElementById("salesList");
 
 async function loadSales() {
-  try {
-      const token = getToken();
-      const sales = await apiFetch("/sales", "GET", null, token);
-      list.innerHTML = "";
-      sales.forEach((sale) => {
-          const totalPaid = sale.totalPaid || sale.payments.reduce((sum, payment) => sum + payment.amount, 0);
-          const remainingDebt = sale.price - totalPaid;
-          const li = document.createElement("li");
-          li.innerHTML = `
-              <span>${sale.clientName} - ${sale.productName} -  ${remainingDebt} COP</span>
-              <div class="buttons-container">
-                  <button id="info" class="info btn">Info</button>
-                  <button class="edit btn">Editar</button>
-                  <button class="delete btn">Eliminar</button>
-              </div>
-          `;
-
-          li.querySelector(".info").addEventListener("click", () => viewSaleDetails(sale));
-          li.querySelector(".edit").addEventListener("click", () => editSale(sale));
-          li.querySelector(".delete").addEventListener("click", () => deleteSale(sale._id));
-          list.appendChild(li);
-      });
-  } catch (error) {
-      console.error("Error al cargar ventas:", error);
-      alert("No se pudieron cargar las ventas");
+    try {
+        const token = getToken();
+        const sales = await apiFetch("/sales", "GET", null, token);
+        list.innerHTML = "";
+        
+        // Esto ya filtra las ventas no liquidadas desde el backend
+        // pero podemos añadir una verificación adicional por seguridad
+        const activeSales = sales.filter(sale => !sale.settled);
+        
+        activeSales.forEach((sale) => {
+            const totalPaid = sale.totalPaid || sale.payments.reduce((sum, payment) => sum + payment.amount, 0);
+            const remainingDebt = sale.price - totalPaid;
+            const li = document.createElement("li");
+            li.innerHTML = `
+                <span>${sale.clientName} - ${sale.productName} -  ${remainingDebt} COP</span>
+                <div class="buttons-container">
+                    <button id="info" class="info btn">Info</button>
+                    <button class="edit btn">Editar</button>
+                    <button class="delete btn">Eliminar</button>
+                </div>
+            `;
+  
+            li.querySelector(".info").addEventListener("click", () => viewSaleDetails(sale));
+            li.querySelector(".edit").addEventListener("click", () => editSale(sale));
+            li.querySelector(".delete").addEventListener("click", () => deleteSale(sale._id));
+            list.appendChild(li);
+        });
+    } catch (error) {
+        console.error("Error al cargar ventas:", error);
+        alert("No se pudieron cargar las ventas");
+    }
   }
-}
 
 function viewSaleDetails(sale) {
   localStorage.setItem("saleDetails", JSON.stringify(sale));
@@ -83,18 +88,33 @@ function editSale(sale) {
     btnSave.style.display = "none";
     btnUpdate.style.display = "inline-block";
     btnCancel.style.display = "inline-block";
+    // Cambiar texto del botón delete por "Liquidar"
+    btnDelete.textContent = "Liquidar";
     btnDelete.style.display = "inline-block";
     btnAddPayment.style.display = "inline-block";
 }
-
+// Cambiar la función del botón delete
 btnDelete.addEventListener("click", async () => {
     const id = inputId.value;
     if (!id) {
         alert("No se ha seleccionado ninguna venta.");
         return;
     }
-    await deleteSale(id);
-    cancelUpdate();
+    
+    if (!confirm("¿Estás seguro de que deseas liquidar esta venta?")) {
+        return;
+    }
+    
+    try {
+        const token = getToken();
+        await apiFetch(`/sales/${id}/settle`, "PATCH", null, token);
+        alert("Venta liquidada correctamente.");
+        cancelUpdate();
+        loadSales();
+    } catch (error) {
+        console.error("Error al liquidar la venta:", error.message);
+        alert("No se pudo liquidar la venta.");
+    }
 });
 
 async function saveSale() {

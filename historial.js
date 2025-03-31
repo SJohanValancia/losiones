@@ -11,24 +11,30 @@ document.addEventListener("DOMContentLoaded", async () => {
         const token = getToken();
         sales = await apiFetch("/sales", "GET", null, token);
 
-        displaySales(sales);
-        updateTotalDebt(sales);
+        // Filter out settled sales
+        const unsettledSales = sales.filter(sale => !sale.settled);
+        
+        displaySales(unsettledSales);
+        updateTotalDebt(unsettledSales);
 
         // Filtrar las ventas mientras se escribe en el campo de búsqueda
         searchInput.addEventListener("input", () => {
             const searchText = searchInput.value.toLowerCase().trim();
 
             if (searchText === "") {
-                displaySales(sales);
+                displaySales(unsettledSales);
+                updateTotalDebt(unsettledSales);
             } else {
-                const filteredSales = sales.filter(sale => 
+                const filteredSales = unsettledSales.filter(sale => 
                     sale.clientName.toLowerCase().includes(searchText)
                 );
 
                 if (filteredSales.length > 0) {
                     displaySales(filteredSales);
+                    updateTotalDebt(filteredSales);
                 } else {
                     salesHistory.innerHTML = "<p>No existe esa venta.</p>";
+                    updateTotalDebt([]);
                 }
             }
         });
@@ -42,6 +48,11 @@ document.addEventListener("DOMContentLoaded", async () => {
 function displaySales(salesList) {
     const salesHistory = document.getElementById("salesHistory");
     salesHistory.innerHTML = ""; // Limpiar antes de actualizar
+
+    if (salesList.length === 0) {
+        salesHistory.innerHTML = "<p>No hay ventas pendientes para mostrar.</p>";
+        return;
+    }
 
     salesList.forEach((sale) => {
         const totalPaid = sale.totalPaid || (sale.payments ? sale.payments.reduce((sum, payment) => sum + payment.amount, 0) : 0);
@@ -93,6 +104,11 @@ async function deleteSale(id, listItem) {
         await apiFetch(`/sales/${id}`, "DELETE", null, token);
         listItem.remove();
         alert("Venta eliminada correctamente.");
+        
+        // Reload the sales data to update the total debt
+        const sales = await apiFetch("/sales", "GET", null, token);
+        const unsettledSales = sales.filter(sale => !sale.settled);
+        updateTotalDebt(unsettledSales);
     } catch (error) {
         console.error("Error al eliminar la venta:", error);
         alert("No se pudo eliminar la venta, vuelva a intentarlo.");
@@ -102,4 +118,3 @@ async function deleteSale(id, listItem) {
 function editSale(sale) {
     window.location.href = "categories.html";
 }
-//
