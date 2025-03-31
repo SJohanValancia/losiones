@@ -67,12 +67,14 @@ function displaySales(salesList) {
                 <button class="info btn">Info</button>
                 <button class="edit btn">volver</button>
                 <button class="delete btn">Eliminar</button>
+                <button class="settle btn">Liquidar</button>
             </div>
         `;
 
         li.querySelector(".info").addEventListener("click", () => viewSaleDetails(sale));
         li.querySelector(".edit").addEventListener("click", () => editSale(sale));
         li.querySelector(".delete").addEventListener("click", () => deleteSale(sale._id, li));
+        li.querySelector(".settle").addEventListener("click", () => settleSale(sale._id, li));
 
         salesHistory.appendChild(li);
     });
@@ -112,6 +114,25 @@ async function deleteSale(id, listItem) {
     } catch (error) {
         console.error("Error al eliminar la venta:", error);
         alert("No se pudo eliminar la venta, vuelva a intentarlo.");
+    }
+}
+
+async function settleSale(id, listItem) {
+    if (!confirm("¿Estás seguro de que deseas liquidar esta venta?")) return;
+
+    try {
+        const token = getToken();
+        await apiFetch(`/sales/${id}/settle`, "PATCH", null, token);
+        listItem.remove();
+        alert("Venta liquidada correctamente.");
+        
+        // Reload the sales data to update the total debt
+        const sales = await apiFetch("/sales", "GET", null, token);
+        const unsettledSales = sales.filter(sale => !sale.settled);
+        updateTotalDebt(unsettledSales);
+    } catch (error) {
+        console.error("Error al liquidar la venta:", error);
+        alert("No se pudo liquidar la venta, vuelva a intentarlo.");
     }
 }
 

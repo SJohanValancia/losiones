@@ -3,7 +3,17 @@ const auth = require("../middleware/auth");
 const Sale = require("../models/Sale");
 const router = express.Router();
 
-// 🟣 Marcar una venta como liquidada
+// Obtener todas las ventas (liquidadas y no liquidadas)
+router.get("/all", auth, async (req, res) => {
+    try {
+        const sales = await Sale.find({ user: req.user.id });
+        res.json(sales);
+    } catch (error) {
+        res.status(500).json({ error: "Error al obtener todas las ventas" });
+    }
+});
+
+// Marcar una venta como liquidada
 router.patch("/:id/settle", auth, async (req, res) => {
     try {
         const sale = await Sale.findOne({ _id: req.params.id, user: req.user.id });
@@ -23,7 +33,7 @@ router.patch("/:id/settle", auth, async (req, res) => {
     }
 });
 
-// 🔵 Obtener todas las ventas activas (no liquidadas) del usuario
+// Obtener todas las ventas activas (no liquidadas) del usuario
 router.get("/", auth, async (req, res) => {
     try {
         const sales = await Sale.find({ user: req.user.id, settled: false });
@@ -33,7 +43,7 @@ router.get("/", auth, async (req, res) => {
     }
 });
 
-// 🟣 Obtener todas las ventas liquidadas del usuario
+// Obtener todas las ventas liquidadas del usuario
 router.get("/settled", auth, async (req, res) => {
     try {
         const sales = await Sale.find({ user: req.user.id, settled: true });
@@ -43,20 +53,10 @@ router.get("/settled", auth, async (req, res) => {
     }
 });
 
-// 🟢 Crear nueva venta
+// Crear nueva venta
 router.post("/new", auth, async (req, res) => {
     try {
         const { clientName, productName, saleDate, price, installments, advancePayment } = req.body;
-
-        // Log received data for debugging
-        console.log("Datos recibidos en el servidor:", { 
-            clientName, 
-            productName, 
-            saleDate, 
-            price, 
-            installments, 
-            advancePayment 
-        });
 
         if (!clientName || !productName || !saleDate || !price) {
             return res.status(400).json({ error: "Todos los campos son obligatorios" });
@@ -67,7 +67,7 @@ router.post("/new", auth, async (req, res) => {
             productName,
             saleDate,
             price,
-            installments, // Just pass the value as is, since it's now a text field
+            installments,
             advancePayment,
             user: req.user.id
         });
@@ -80,17 +80,7 @@ router.post("/new", auth, async (req, res) => {
     }
 });
 
-// 🔵 Obtener todas las ventas del usuario
-router.get("/", auth, async (req, res) => {
-    try {
-        const sales = await Sale.find({ user: req.user.id });
-        res.json(sales);
-    } catch (error) {
-        res.status(500).json({ error: "Error al obtener las ventas" });
-    }
-});
-
-// 🟠 Actualizar una venta
+// Actualizar una venta
 router.put("/:id", auth, async (req, res) => {
     const { clientName, productName, saleDate, price, installments } = req.body;
 
@@ -115,7 +105,7 @@ router.put("/:id", auth, async (req, res) => {
     }
 });
 
-// 🟢 Agregar un nuevo abono
+// Agregar un nuevo abono
 router.post("/:id/payment", auth, async (req, res) => {
     const { amount, date } = req.body;
 
@@ -143,7 +133,7 @@ router.post("/:id/payment", auth, async (req, res) => {
     }
 });
 
-// 🔴 Eliminar una venta
+// Eliminar una venta
 router.delete("/:id", auth, async (req, res) => {
     try {
         const sale = await Sale.findOneAndDelete({ _id: req.params.id, user: req.user.id });

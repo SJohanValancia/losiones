@@ -110,13 +110,12 @@ btnDelete.addEventListener("click", async () => {
         await apiFetch(`/sales/${id}/settle`, "PATCH", null, token);
         alert("Venta liquidada correctamente.");
         cancelUpdate();
-        loadSales();
+        loadSales(); // Recarga las ventas después de liquidar
     } catch (error) {
         console.error("Error al liquidar la venta:", error.message);
         alert("No se pudo liquidar la venta.");
     }
 });
-
 async function saveSale() {
     // Log the value to debug
     console.log("Valor de installments antes de guardar:", inputInstallments.value);

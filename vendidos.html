@@ -11,13 +11,27 @@
     <input type="text" id="searchInput" placeholder="🔍 Buscar producto vendido..." />
 
     <div id="vendidosContainer" class="container">
+        <nav id="navbar" class="navbar">
+            <ul>
+                <li><a href="categories.html">Registro</a></li>
+                <li><a href="historial.html">Historial</a></li>
+                <li><a href="liquidados.html">Liquidados</a></li>
+                <li><a href="productos.html">Agregar Producto</a></li>
+                <li><a href="inventario.html">Inventario</a></li>
+                <li><a href="abonos.html">Registro de Abonos</a></li>
+            </ul>
+        </nav>
+        
         <h1>📦 Productos Vendidos</h1>
 
-        <ul id="productsList" class="sales-list"></ul>
+        <ul id="productsList" class="products-list"></ul>
     </div>
 
-    <div id="totalSoldContainer">
-        <h2>💲 Total Vendido: <span id="totalSold">0</span> COP</h2>
+    <div id="totalsSummary">
+        <h2>📊 Resumen</h2>
+        <p>📦 Total productos vendidos: <span id="totalProducts">0</span></p>
+        <p>💲 Total vendido: <span id="totalSold">0</span> COP</p>
+        <p>💰 Ganancia total: <span id="totalProfit">0</span> COP</p>
     </div>
 
     <script type="module" src="vendidos.js"></script>
