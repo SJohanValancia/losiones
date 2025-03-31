@@ -412,3 +412,60 @@ html, body {
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   color: black;
 }
+
+/* ---- Barra de navegación ---- */
+.navbar {
+
+  transform: translateX(70px);
+  background-color: #03312E;
+  width: 50%;
+  max-width: 800px;
+  padding: 15px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 20px;
+}
+
+.navbar ul {
+  list-style: none;
+  display: flex;
+  gap: 20px;
+  padding: 0;
+  margin: 0;
+}
+
+.navbar a {
+
+  text-decoration: none;
+  color: white;
+  font-size: 16px;
+  padding: 8px 15px;
+  border-radius: 5px;
+  transition: background-color 0.3s ease;
+}
+
+.navbar a:hover {
+  background-color: #c0b577;
+}
+
+
+.navbar {
+  width: 100%;
+  max-width: 100%;
+  transform: translateX(0);
+  padding: 10px;
+  margin-bottom: 15px;
+}
+
+.navbar ul {
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+.navbar a {
+  width: 100%;
+  text-align: center;
+  display: block;
+}

@@ -76,12 +76,31 @@ function displayProducts(products) {
                 <p><strong>Precio de costo:</strong> ${product.costPrice.toLocaleString()} COP</p>
                 <p><strong>Precio de venta:</strong> ${product.salePrice.toLocaleString()} COP</p>
                 <p><strong>Ganancia:</strong> ${profit.toLocaleString()} COP (${profitPercentage}%)</p>
+                <button class="delete-btn" data-id="${product._id}">Eliminar Producto</button>
             </div>
         `;
         
         productsList.appendChild(li);
     });
+
+    // Agregar event listeners para los botones de eliminar
+    const deleteButtons = document.querySelectorAll(".delete-btn");
+    deleteButtons.forEach(button => {
+        button.addEventListener("click", async (e) => {
+            const productId = e.target.dataset.id;
+            try {
+                const token = getToken();
+                await apiFetch(`/products/${productId}`, "DELETE", null, token);
+                alert("Producto eliminado correctamente");
+                window.location.reload();  // Recarga la página para actualizar la lista
+            } catch (error) {
+                console.error("Error al eliminar el producto:", error);
+                alert("No se pudo eliminar el producto.");
+            }
+        });
+    });
 }
+
 
 function updateTotals(products) {
     const totalSoldElement = document.getElementById("totalSold");

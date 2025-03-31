@@ -100,5 +100,24 @@ router.put("/:id/sell", auth, async (req, res) => {
     }
 });
 
+// Eliminar un producto de una venta
+router.patch("/:id/product", auth, async (req, res) => {
+    try {
+        const sale = await Sale.findOne({ _id: req.params.id, user: req.user.id });
+
+        if (!sale) {
+            return res.status(404).json({ error: "Venta no encontrada" });
+        }
+
+        // Eliminar el nombre del producto de la venta
+        sale.productName = null;  // Si deseas eliminar el producto por completo
+
+        await sale.save();
+        res.json(sale);
+    } catch (error) {
+        res.status(500).json({ error: "Error al eliminar el producto vendido" });
+    }
+});
+
 
 module.exports = router;

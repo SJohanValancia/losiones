@@ -13,6 +13,22 @@ router.get("/all", auth, async (req, res) => {
     }
 });
 
+// Eliminar una venta liquidada
+router.delete("/:id/settled", auth, async (req, res) => {
+    try {
+        const sale = await Sale.findOneAndDelete({ _id: req.params.id, user: req.user.id, settled: true });
+
+        if (!sale) {
+            return res.status(404).json({ error: "Venta liquidada no encontrada" });
+        }
+
+        res.json({ message: "Venta liquidada eliminada correctamente" });
+    } catch (error) {
+        res.status(500).json({ error: "Error al eliminar la venta liquidada" });
+    }
+});
+
+
 // Marcar una venta como liquidada
 router.patch("/:id/settle", auth, async (req, res) => {
     try {

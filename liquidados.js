@@ -1,11 +1,13 @@
 import { apiFetch } from "./utils/api.js";
 import { getToken } from "./utils/auth.js";
 
+let sales = [];
+
 document.addEventListener("DOMContentLoaded", async () => {
     const liquidatedHistory = document.getElementById("liquidatedHistory");
     const searchInput = document.getElementById("searchInput");
     const totalLiquidatedElement = document.getElementById("totalLiquidated");
-    let sales = [];
+
 
     try {
         const token = getToken();
@@ -38,7 +40,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     } catch (error) {
         console.error("Error al cargar las ventas liquidadas:", error);
-        liquidatedHistory.innerHTML = "<p>No se pudieron cargar las ventas liquidadas, vuelvalo a intentar.</p>";
+        liquidatedHistory.innerHTML = "<p>No se pudieron cargar las ventas liquidadas, vuelva a intentarlo.</p>";
     }
 });
 
@@ -66,6 +68,7 @@ function displayLiquidatedSales(salesList) {
                 <p><strong>Precio:</strong> ${sale.price.toLocaleString()} COP</p>
                 <p><strong>Fecha de venta:</strong> ${saleDate}</p>
                 <p><strong>Liquidado el:</strong> ${settledDate}</p>
+                <button class="delete-btn" data-id="${sale._id}">Eliminar</button> <!-- Botón de eliminar -->
             </div>
         `;
 
@@ -73,6 +76,27 @@ function displayLiquidatedSales(salesList) {
     });
 
     updateTotalLiquidated(salesList);
+
+    // Agregar evento al botón de eliminar
+    const deleteButtons = document.querySelectorAll(".delete-btn");
+    deleteButtons.forEach(button => {
+        button.addEventListener("click", async (e) => {
+            const saleId = e.target.dataset.id;
+            try {
+                const token = getToken();
+                await apiFetch(`/sales/${saleId}`, "DELETE", null, token); // Eliminar la venta del backend
+
+                // Filtrar la venta eliminada y actualizar la vista
+                sales = sales.filter(sale => sale._id !== saleId);
+                displayLiquidatedSales(sales);
+                updateTotalLiquidated(sales);
+                alert("Venta eliminada correctamente.");
+            } catch (error) {
+                console.error("Error al eliminar la venta:", error);
+                alert("No se pudo eliminar la venta.");
+            }
+        });
+    });
 }
 
 function updateTotalLiquidated(salesList) {
