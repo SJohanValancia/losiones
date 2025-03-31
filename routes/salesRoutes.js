@@ -33,15 +33,16 @@ router.patch("/:id/settle", auth, async (req, res) => {
     }
 });
 
-// Obtener todas las ventas activas (no liquidadas) del usuario
+// Obtener todas las ventas, sin importar si están liquidadas o no
 router.get("/", auth, async (req, res) => {
     try {
-        const sales = await Sale.find({ user: req.user.id, settled: false });
+        const sales = await Sale.find({ user: req.user.id });  // Sin filtro por settled
         res.json(sales);
     } catch (error) {
         res.status(500).json({ error: "Error al obtener las ventas" });
     }
 });
+
 
 // Obtener todas las ventas liquidadas del usuario
 router.get("/settled", auth, async (req, res) => {
