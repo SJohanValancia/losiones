@@ -1,8 +1,11 @@
+import { apiFetch } from "./utils/api.js";
+import { getToken } from "./utils/auth.js"; // ✅ Asegúrate de importar getToken
+
 async function loadSoldProducts() {
     try {
         const token = getToken();
         if (!token) {
-            window.location.href = "index.html";
+            window.location.href = "login.html";
             return;
         }
 
