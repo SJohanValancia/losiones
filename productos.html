@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Administrar Productos</title>
+    <title>Inventario</title>
     <link rel="stylesheet" href="css/dashboard.css" />
     <style>
       @media screen and (max-width: 375px) {
@@ -23,108 +23,105 @@
           width: 100%;
         }
       }
+
+      /* Estilo para la lista de productos */
+      .products-list {
+        margin-top: 50px;
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); /* Crear columnas flexibles */
+        gap: 20px; /* Espacio entre las tarjetas de productos */
+        padding: 20px;
+        list-style: none;
+        justify-items: center; /* Alinea los productos en el centro de cada celda */
+      }
+    
+      /* Estilo para cada elemento de producto */
+      .products-list li {
+        background: rgba(255, 255, 255, 0.15);
+        padding: 20px;
+        border-radius: 15px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        align-items: center;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        color: #ffffff;
+      }
+    
+      .products-list li:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
+      }
+    
+      /* Estilo para la información del producto */
+      .product-info h3 {
+        font-size: 18px;
+        font-weight: bold;
+        margin-bottom: 10px;
+      }
+    
+      .product-info p {
+        font-size: 16px;
+        margin: 5px 0;
+      }
+    
+      /* Botones dentro de cada producto */
+
     </style>
   </head>
   <body>
     <div class="container">
+      <!-- Barra de navegación -->
       <nav id="navbar" class="navbar">
         <ul>
           <li><a href="categories.html">Registro</a></li>
-          <li><a href="inventario.html">Inventario</a></li>
+          <li><a href="vendidos.html">Productos Vendidos</a></li>
         </ul>
       </nav>
-      <h1>Agregar Producto</h1>
 
-      <!-- Formulario de Registro de Producto -->
-      <div class="form-container">
-        <form id="productForm">
-          <input type="hidden" id="productId" value="" />
-          
-          <div class="wave-group">
-            <input id="productName" required type="text" class="input" />
-            <span class="bar"></span>
-            <label class="label">
-              <span class="label-char" style="--index: 0">N</span>
-              <span class="label-char" style="--index: 1">o</span>
-              <span class="label-char" style="--index: 2">m</span>
-              <span class="label-char" style="--index: 3">b</span>
-              <span class="label-char" style="--index: 4">r</span>
-              <span class="label-char" style="--index: 5">e</span>
-              <span class="label-char" style="--index: 6">ㅤ</span>
-              <span class="label-char" style="--index: 7">d</span>
-              <span class="label-char" style="--index: 8">e</span>
-              <span class="label-char" style="--index: 9">ㅤ</span>
-              <span class="label-char" style="--index: 10">L</span>
-              <span class="label-char" style="--index: 11">o</span>
-              <span class="label-char" style="--index: 12">c</span>
-              <span class="label-char" style="--index: 13">i</span>
-              <span class="label-char" style="--index: 14">ó</span>
-              <span class="label-char" style="--index: 15">n</span>
-            </label>
-          </div>
-          
-          <div class="wave-group">
-            <input id="costPrice" required type="number" class="input" />
-            <span class="bar"></span>
-            <label class="label">
-              <span class="label-char" style="--index: 0">P</span>
-              <span class="label-char" style="--index: 1">r</span>
-              <span class="label-char" style="--index: 2">e</span>
-              <span class="label-char" style="--index: 3">c</span>
-              <span class="label-char" style="--index: 4">i</span>
-              <span class="label-char" style="--index: 5">o</span>
-              <span class="label-char" style="--index: 6">ㅤ</span>
-              <span class="label-char" style="--index: 7">d</span>
-              <span class="label-char" style="--index: 8">e</span>
-              <span class="label-char" style="--index: 9">ㅤ</span>
-              <span class="label-char" style="--index: 10">C</span>
-              <span class="label-char" style="--index: 11">o</span>
-              <span class="label-char" style="--index: 12">s</span>
-              <span class="label-char" style="--index: 13">t</span>
-              <span class="label-char" style="--index: 14">o</span>
-            </label>
-          </div>
-          
-          <div class="wave-group">
-            <input id="salePrice" required type="number" class="input" />
-            <span class="bar"></span>
-            <label class="label">
-              <span class="label-char" style="--index: 0">P</span>
-              <span class="label-char" style="--index: 1">r</span>
-              <span class="label-char" style="--index: 2">e</span>
-              <span class="label-char" style="--index: 3">c</span>
-              <span class="label-char" style="--index: 4">i</span>
-              <span class="label-char" style="--index: 5">o</span>
-              <span class="label-char" style="--index: 6">ㅤ</span>
-              <span class="label-char" style="--index: 7">d</span>
-              <span class="label-char" style="--index: 8">e</span>
-              <span class="label-char" style="--index: 9">ㅤ</span>
-              <span class="label-char" style="--index: 10">V</span>
-              <span class="label-char" style="--index: 11">e</span>
-              <span class="label-char" style="--index: 12">n</span>
-              <span class="label-char" style="--index: 13">t</span>
-              <span class="label-char" style="--index: 14">a</span>
-            </label>
-          </div>
+      <!-- Campo de búsqueda -->
+      <input type="text" id="searchInput" placeholder="🔍 Buscar producto por nombre..." />
 
-          <div class="buttons">
-            <button type="button" id="saveProduct">Guardar</button>
-            <button type="button" id="updateProduct" style="display: none">Actualizar</button>
-            <button type="button" id="cancelUpdate" style="display: none">Cancelar</button>
-            <button type="button" id="deleteProduct" style="display: none">Eliminar</button>
-          </div>
-        </form>
+      <!-- Título de la página -->
+      <div class="list-container">
+        <h1>Inventario de Productos</h1>
+
+        <!-- Formulario para agregar producto -->
+        <div class="form-container">
+          <form id="productForm">
+            <div class="wave-group">
+              <input id="productName" required type="text" class="input" />
+              <label class="label">Nombre de Producto</label>
+            </div>
+            <div class="wave-group">
+              <input id="costPrice" required type="number" class="input" />
+              <label class="label">Precio de Costo</label>
+            </div>
+            <div class="wave-group">
+              <input id="salePrice" required type="number" class="input" />
+              <label class="label">Precio de Venta</label>
+            </div>
+
+            <div class="buttons">
+              <button type="button" id="saveProduct">Guardar</button>
+            </div>
+          </form>
+        </div>
+
+        <!-- Lista de productos -->
+        <ul id="productsList" class="products-list">
+          <!-- Productos se agregan dinámicamente aquí -->
+        </ul>
       </div>
 
-      <!-- Listado de Productos -->
-      <div class="list-container">
-        <h2>PRODUCTOS</h2>
-        <ul id="productsList">
-          <!-- Aquí se agregarán dinámicamente los productos -->
-        </ul>
+      <!-- Total de productos -->
+      <div id="totalProductsContainer">
+        <h2 style="display: none;" >📦 Total productos: <span id="totalProducts">0</span></h2>
       </div>
     </div>
 
-    <script src="productos.js" type="module"></script>
+    <script type="module" src="inventario.js"></script>
   </body>
 </html>

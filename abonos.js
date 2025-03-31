@@ -79,6 +79,9 @@ document.addEventListener("DOMContentLoaded", async () => {
                     <p><strong>Monto abonado:</strong> ${payment.amount.toLocaleString()} COP</p>
                     <p><strong>Fecha:</strong> ${paymentDate}</p>
                 </div>
+
+                
+
             `;
             
             paymentsList.appendChild(li);

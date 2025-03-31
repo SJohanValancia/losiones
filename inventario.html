@@ -5,6 +5,83 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Inventario</title>
     <link rel="stylesheet" href="css/dashboard.css">
+
+    <style>
+        /* Estilos para la lista de productos */
+.products-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); /* Crear columnas flexibles */
+    gap: 20px; /* Espacio entre las tarjetas de productos */
+    padding: 20px;
+    list-style: none;
+    justify-items: center; /* Alinea los productos en el centro de cada celda */
+}
+
+/* Estilo para cada elemento de producto */
+.products-list li {
+    background: rgba(255, 255, 255, 0.15);
+    padding: 20px;
+    border-radius: 15px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    color: #ffffff;
+}
+
+.products-list li:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
+}
+
+/* Estilo para la información del producto */
+.product-info h3 {
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.product-info p {
+    font-size: 16px;
+    margin: 5px 0;
+}
+
+/* Botones dentro de cada producto */
+.buttons-container {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-top: 10px;
+}
+
+.buttons-container button {
+    background-color: #03312E;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 10px;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.buttons-container button:hover {
+    background-color: #0D1117;
+    transform: scale(1.05); /* Efecto de agrandar al pasar el mouse */
+}
+
+/* Estilos para el mensaje vacío */
+.empty-message {
+    color: #FFFFFF;
+    font-size: 16px;
+    text-align: center;
+    grid-column: span 3; /* Hacer que ocupe toda la fila */
+}
+
+    </style>
+    
 </head>
 <body>
     <input type="text" id="searchInput" placeholder="🔍 Buscar producto por nombre..." />
@@ -19,12 +96,14 @@
             </ul>
         </nav>
         
+
+
         <div class="list-container" >
         <h1>Inventario de Productos</h1>
         <ul id="productsList" class="products-list"></ul>
     </div>
     </div>
-    
+
 
     <div id="totalProductsContainer">
         <h2>📦 Total productos: <span id="totalProducts">0</span></h2>
