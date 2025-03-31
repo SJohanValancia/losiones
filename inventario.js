@@ -38,7 +38,7 @@ function displayProducts(products) {
 
     products.forEach(product => {
         const li = document.createElement("li");
-        
+
         li.innerHTML = `
             <div class="product-info">
                 <h3>${product.name}</h3>
@@ -48,13 +48,30 @@ function displayProducts(products) {
             </div>
             <div class="buttons-container">
                 <button class="edit btn">Editar</button>
+                <button class="sell btn" ${product.sold ? "disabled" : ""}>Vendido</button>
             </div>
         `;
-        
+
         li.querySelector(".edit").addEventListener("click", () => {
             window.location.href = "productos.html";
         });
-        
+
+        const sellButton = li.querySelector(".sell");
+        if (!product.sold) {
+            sellButton.addEventListener("click", async () => {
+                try {
+                    const token = getToken();
+                    await apiFetch(`/products/${product._id}/sell`, "PUT", null, token);
+                    sellButton.disabled = true;
+                    alert("Producto marcado como vendido");
+                    loadProducts(); // Recargar productos
+                } catch (error) {
+                    console.error("Error al marcar como vendido:", error);
+                    alert("No se pudo marcar el producto como vendido.");
+                }
+            });
+        }
+
         productsList.appendChild(li);
     });
 }
