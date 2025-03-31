@@ -18,18 +18,14 @@ document.addEventListener("DOMContentLoaded", async () => {
             return;
         }
 
-        // Cargar todas las ventas (liquidadas y no liquidadas)
         allSales = await apiFetch("/sales/all", "GET", null, token);
-        
-        // Extraer todos los pagos de todas las ventas
         allPayments = extractAllPayments(allSales);
         
         displayPayments(allPayments);
         updateTotalPayments(allPayments);
 
-        // Eventos para filtros
         searchInput.addEventListener("input", applyFilters);
-        dateFilter.addEventListener("change", applyFilters);
+        dateFilter.addEventListener("input", applyFilters);
         clearFiltersBtn.addEventListener("click", clearFilters);
 
     } catch (error) {
@@ -52,8 +48,6 @@ document.addEventListener("DOMContentLoaded", async () => {
                 });
             }
         });
-        
-        // Ordenar por fecha más reciente primero
         return payments.sort((a, b) => new Date(b.date) - new Date(a.date));
     }
 
@@ -68,8 +62,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         payments.forEach(payment => {
             const li = document.createElement("li");
             li.classList.add("payment-item");
-            
-            // Formatear fecha
             const paymentDate = new Date(payment.date).toLocaleDateString();
             
             li.innerHTML = `
@@ -79,11 +71,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                     <p><strong>Monto abonado:</strong> ${payment.amount.toLocaleString()} COP</p>
                     <p><strong>Fecha:</strong> ${paymentDate}</p>
                 </div>
-
-                
-
             `;
-            
             paymentsList.appendChild(li);
         });
     }
@@ -99,7 +87,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         
         let filteredPayments = [...allPayments];
         
-        // Filtrar por texto de búsqueda
         if (searchText) {
             filteredPayments = filteredPayments.filter(payment => 
                 payment.clientName.toLowerCase().includes(searchText) ||
@@ -107,7 +94,6 @@ document.addEventListener("DOMContentLoaded", async () => {
             );
         }
         
-        // Filtrar por fecha
         if (dateValue) {
             const selectedDate = new Date(dateValue);
             selectedDate.setHours(0, 0, 0, 0);
