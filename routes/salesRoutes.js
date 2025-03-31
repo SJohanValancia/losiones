@@ -33,15 +33,19 @@ router.patch("/:id/settle", auth, async (req, res) => {
     }
 });
 
-// Obtener todas las ventas, sin importar si están liquidadas o no
+// Obtener todas las ventas, excluyendo las liquidadas
 router.get("/", auth, async (req, res) => {
     try {
-        const sales = await Sale.find({ user: req.user.id });  // Sin filtro por settled
+        const sales = await Sale.find({ 
+            user: req.user.id, 
+            settled: { $ne: true }  // Excluir ventas donde settled es true
+        });
         res.json(sales);
     } catch (error) {
         res.status(500).json({ error: "Error al obtener las ventas" });
     }
 });
+
 
 
 // Obtener todas las ventas liquidadas del usuario
