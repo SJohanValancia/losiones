@@ -82,4 +82,22 @@ router.delete("/:id", auth, async (req, res) => {
     }
 });
 
+router.put("/:id/sell", auth, async (req, res) => {
+    try {
+        const product = await Product.findOne({ _id: req.params.id, user: req.user.id });
+
+        if (!product) {
+            return res.status(404).json({ error: "Producto no encontrado" });
+        }
+
+        product.sold = true;
+        await product.save();
+
+        res.json({ message: "Producto marcado como vendido", product });
+    } catch (error) {
+        res.status(500).json({ error: "Error al actualizar el producto" });
+    }
+});
+
+
 module.exports = router;

@@ -3,19 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ventas Liquidadas</title>
+    <title>Historial de Liquidados</title>
     <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
+
     <input type="text" id="searchInput" placeholder="🔍 Buscar cliente por nombre..." />
 
     <div id="historial" class="container">
-        <h1>Ventas Liquidadas</h1>
-        <ul id="settledSalesList" class="sales-list"></ul>
+        <h1>Historial de Liquidados</h1>
+        <ul id="liquidatedHistory" class="sales-list"></ul>
     </div>
 
-    <div id="totalContainer">
-        <h2>💰 Total liquidado: <span id="totalSettled">0</span> COP</h2>
+    <div id="totalDebtContainer">
+        <h2>✅ Total Liquidado: <span id="totalLiquidated">0</span> </h2>
     </div>
 
     <script type="module" src="liquidados.js"></script>

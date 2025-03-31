@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Productos Vendidos</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+    <input type="text" id="searchInput" placeholder="🔍 Buscar producto vendido..." />
+
+    <div id="vendidosContainer" class="container">
+        <h1>📦 Productos Vendidos</h1>
+
+        <ul id="productsList" class="sales-list"></ul>
+    </div>
+
+    <div id="totalSoldContainer">
+        <h2>💲 Total Vendido: <span id="totalSold">0</span> COP</h2>
+    </div>
+
+    <script type="module" src="vendidos.js"></script>
+</body>
+</html>

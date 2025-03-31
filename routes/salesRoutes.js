@@ -23,6 +23,25 @@ router.patch("/:id/settle", auth, async (req, res) => {
     }
 });
 
+// 🔵 Obtener todas las ventas activas (no liquidadas) del usuario
+router.get("/", auth, async (req, res) => {
+    try {
+        const sales = await Sale.find({ user: req.user.id, settled: false });
+        res.json(sales);
+    } catch (error) {
+        res.status(500).json({ error: "Error al obtener las ventas" });
+    }
+});
+
+// 🟣 Obtener todas las ventas liquidadas del usuario
+router.get("/settled", auth, async (req, res) => {
+    try {
+        const sales = await Sale.find({ user: req.user.id, settled: true });
+        res.json(sales);
+    } catch (error) {
+        res.status(500).json({ error: "Error al obtener las ventas liquidadas" });
+    }
+});
 
 // 🟢 Crear nueva venta
 router.post("/new", auth, async (req, res) => {
