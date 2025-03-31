@@ -18,18 +18,25 @@ const btnCancel = document.getElementById("cancelUpdate");
 const btnDelete = document.getElementById("deleteSale");
 const btnAddPayment = document.getElementById("addPayment");
 const list = document.getElementById("salesList");
+const searchInput = document.getElementById("searchInput");  // Campo de búsqueda
 
-async function loadSales() {
+async function loadSales(query = "") {
     try {
         const token = getToken();
         const sales = await apiFetch("/sales", "GET", null, token);
         list.innerHTML = "";
-        
-        // Esto ya filtra las ventas no liquidadas desde el backend
-        // pero podemos añadir una verificación adicional por seguridad
+
+        // Filtrar las ventas no liquidadas desde el backend
         const activeSales = sales.filter(sale => !sale.settled);
-        
-        activeSales.forEach((sale) => {
+
+        // Si hay un query de búsqueda, filtrar las ventas que coincidan con el nombre
+        const filteredSales = activeSales.filter(sale => {
+            const clientMatch = sale.clientName.toLowerCase().includes(query.toLowerCase());
+            const productMatch = sale.productName.toLowerCase().includes(query.toLowerCase());
+            return clientMatch || productMatch;
+        });
+
+        filteredSales.forEach((sale) => {
             const totalPaid = sale.totalPaid || sale.payments.reduce((sum, payment) => sum + payment.amount, 0);
             const remainingDebt = sale.price - totalPaid;
             const li = document.createElement("li");
@@ -41,7 +48,7 @@ async function loadSales() {
                     <button class="delete btn">Eliminar</button>
                 </div>
             `;
-  
+
             li.querySelector(".info").addEventListener("click", () => viewSaleDetails(sale));
             li.querySelector(".edit").addEventListener("click", () => editSale(sale));
             li.querySelector(".delete").addEventListener("click", () => deleteSale(sale._id));
@@ -51,11 +58,11 @@ async function loadSales() {
         console.error("Error al cargar ventas:", error);
         alert("No se pudieron cargar las ventas");
     }
-  }
+}
 
 function viewSaleDetails(sale) {
-  localStorage.setItem("saleDetails", JSON.stringify(sale));
-  window.location.href = "saleDetails.html";
+    localStorage.setItem("saleDetails", JSON.stringify(sale));
+    window.location.href = "saleDetails.html";
 }
 
 async function deleteSale(id) {
@@ -80,7 +87,7 @@ function editSale(sale) {
     inputDate.value = new Date(sale.saleDate).toISOString().split('T')[0];
     inputPrice.value = sale.price;
     inputInstallments.value = sale.installments;
-    
+
     // Mostrar los elementos para agregar un pago
     document.getElementById("paymentSection").style.display = "block";
     inputPaymentDate.value = new Date().toISOString().split('T')[0];
@@ -88,23 +95,23 @@ function editSale(sale) {
     btnSave.style.display = "none";
     btnUpdate.style.display = "inline-block";
     btnCancel.style.display = "inline-block";
-    // Cambiar texto del botón delete por "Liquidar"
     btnDelete.textContent = "Liquidar";
     btnDelete.style.display = "inline-block";
     btnAddPayment.style.display = "inline-block";
 }
-// Cambiar la función del botón delete
+
+// Cambiar la función del botón delete a liquidar
 btnDelete.addEventListener("click", async () => {
     const id = inputId.value;
     if (!id) {
         alert("No se ha seleccionado ninguna venta.");
         return;
     }
-    
+
     if (!confirm("¿Estás seguro de que deseas liquidar esta venta?")) {
         return;
     }
-    
+
     try {
         const token = getToken();
         await apiFetch(`/sales/${id}/settle`, "PATCH", null, token);
@@ -116,28 +123,23 @@ btnDelete.addEventListener("click", async () => {
         alert("No se pudo liquidar la venta.");
     }
 });
+
 async function saveSale() {
-    // Log the value to debug
-    console.log("Valor de installments antes de guardar:", inputInstallments.value);
-    
     const saleData = {
         clientName: inputClient.value.trim(),
         productName: inputProduct.value.trim(),
         saleDate: inputDate.value,
         price: parseFloat(inputPrice.value),
-        installments: inputInstallments.value.trim(), // Make sure to trim the value
+        installments: inputInstallments.value.trim(),
         advancePayment: parseFloat(inputAdvance.value) || 0
     };
 
-    // Log the complete object to debug
-    console.log("Datos a guardar:", saleData);
-    
-    // Check for empty required fields, but handle installments separately
+    // Verificar campos obligatorios
     if (!saleData.clientName || !saleData.productName || !saleData.saleDate || isNaN(saleData.price)) {
-      alert("Completa todos los campos requeridos.");
-      return;
+        alert("Completa todos los campos requeridos.");
+        return;
     }
-  
+
     try {
         const token = getToken();
         await apiFetch("/sales/new", "POST", saleData, token);
@@ -149,23 +151,18 @@ async function saveSale() {
         alert("No se pudo guardar la venta: " + error.message);
     }
 }
+
 async function updateSale() {
     const id = inputId.value;
-    
-    // Log the value to debug
-    console.log("Valor de installments antes de actualizar:", inputInstallments.value);
-    
+
     const saleData = {
         clientName: inputClient.value.trim(),
         productName: inputProduct.value.trim(),
         saleDate: inputDate.value,
         price: parseFloat(inputPrice.value),
-        installments: inputInstallments.value.trim() // Make sure to trim the value
+        installments: inputInstallments.value.trim()
     };
-    
-    // Log the complete object to debug
-    console.log("Datos a actualizar:", saleData);
-    
+
     try {
         const token = getToken();
         await apiFetch(`/sales/${id}`, "PUT", saleData, token);
@@ -216,6 +213,12 @@ function cancelUpdate() {
     form.reset();
 }
 
+// Event listener para el campo de búsqueda
+searchInput.addEventListener("input", () => {
+    const query = searchInput.value.trim(); // Obtener la búsqueda del usuario
+    loadSales(query); // Recargar las ventas filtradas
+});
+
 btnSave.addEventListener("click", saveSale);
 btnUpdate.addEventListener("click", updateSale);
 btnCancel.addEventListener("click", cancelUpdate);
@@ -223,6 +226,5 @@ btnAddPayment.addEventListener("click", addPayment);
 
 document.addEventListener("DOMContentLoaded", () => {
     loadSales();
-    // Ocultar la sección de pagos al inicio
     document.getElementById("paymentSection") && (document.getElementById("paymentSection").style.display = "none");
 });

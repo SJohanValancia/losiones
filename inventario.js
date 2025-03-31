@@ -47,9 +47,9 @@ function displayProducts(products) {
         li.innerHTML = `
             <div class="product-info">
                 <h3>${product.name}</h3>
-                <p><strong>Precio de costo:</strong> ${product.costPrice.toLocaleString()} COP</p>
+                
                 <p><strong>Precio de venta:</strong> ${product.salePrice.toLocaleString()} COP</p>
-                <p><strong>Margen:</strong> ${(product.salePrice - product.costPrice).toLocaleString()} COP (${Math.round((product.salePrice - product.costPrice) / product.costPrice * 100)}%)</p>
+                
             </div>
             <div class="buttons-container">
                 <button class="edit btn">Editar</button>
