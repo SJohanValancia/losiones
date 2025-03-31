@@ -24,17 +24,19 @@ async function loadProducts() {
         }
         
         const products = await apiFetch("/products", "GET", null, token);
+        const availableProducts = products.filter(product => !product.sold);
+        
         productsList.innerHTML = "";
         
-        if (products.length === 0) {
+        if (availableProducts.length === 0) {
             const emptyMessage = document.createElement("li");
-            emptyMessage.textContent = "No hay productos registrados";
+            emptyMessage.textContent = "No hay productos disponibles";
             emptyMessage.classList.add("empty-message");
             productsList.appendChild(emptyMessage);
             return;
         }
         
-        products.forEach(product => {
+        availableProducts.forEach(product => {
             const li = document.createElement("li");
             li.classList.add("product-item");
             
@@ -128,7 +130,6 @@ async function deleteProduct(id) {
         await apiFetch(`/products/${id}`, "DELETE", null, token);
         alert("Producto eliminado correctamente.");
         
-        // If we were in edit mode for this product, reset the form
         if (inputId.value === id) {
             cancelUpdate();
         }

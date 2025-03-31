@@ -586,8 +586,3 @@ button:hover {
   background: rgba(255, 255, 255, 0.25);
 }
 
-.sales-list,.products-list, .sales-history {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
