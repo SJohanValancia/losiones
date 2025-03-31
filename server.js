@@ -4,6 +4,7 @@ const cors = require("cors"); // Importa CORS
 const connectDB = require("./config/db"); // Asegúrate de que esta conexión esté configurada correctamente
 const authRoutes = require("./routes/authRoutes");
 const salesRoutes = require("./routes/salesRoutes");
+const productRoutes = require("./routes/productRoutes");
 
 dotenv.config();
 connectDB();
@@ -20,6 +21,10 @@ app.use(cors({
 // Rutas
 app.use("/api/auth", authRoutes);
 app.use("/api/sales", salesRoutes);
+app.use('/api/products', productRoutes);
+
+
+
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`Servidor corriendo en el puerto ${PORT}`));

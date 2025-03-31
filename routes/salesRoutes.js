@@ -3,7 +3,25 @@ const auth = require("../middleware/auth");
 const Sale = require("../models/Sale");
 const router = express.Router();
 
+// 🟣 Marcar una venta como liquidada
+router.patch("/:id/settle", auth, async (req, res) => {
+    try {
+        const sale = await Sale.findOne({ _id: req.params.id, user: req.user.id });
 
+        if (!sale) {
+            return res.status(404).json({ error: "Venta no encontrada" });
+        }
+
+        // Marcar como liquidada
+        sale.settled = true;
+        sale.settledDate = new Date();
+
+        await sale.save();
+        res.json(sale);
+    } catch (error) {
+        res.status(500).json({ error: "Error al liquidar la venta" });
+    }
+});
 
 
 // 🟢 Crear nueva venta
