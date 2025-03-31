@@ -82,6 +82,7 @@ router.delete("/:id", auth, async (req, res) => {
     }
 });
 
+// Marcar un producto como vendido
 router.put("/:id/sell", auth, async (req, res) => {
     try {
         const product = await Product.findOne({ _id: req.params.id, user: req.user.id });
@@ -90,12 +91,12 @@ router.put("/:id/sell", auth, async (req, res) => {
             return res.status(404).json({ error: "Producto no encontrado" });
         }
 
-        product.sold = true;
+        product.sold = true; // Marcar como vendido
         await product.save();
 
         res.json({ message: "Producto marcado como vendido", product });
     } catch (error) {
-        res.status(500).json({ error: "Error al actualizar el producto" });
+        res.status(500).json({ error: "Error al marcar como vendido" });
     }
 });
 

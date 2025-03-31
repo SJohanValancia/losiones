@@ -11,19 +11,24 @@ async function loadProducts() {
     try {
         const token = getToken();
         if (!token) {
-            window.location.href = "login.html";
+            window.location.href = "index.html";
             return;
         }
-        
+
         const products = await apiFetch("/products", "GET", null, token);
-        allProducts = products;
-        displayProducts(products);
-        updateTotalProducts(products);
+
+        // Filtrar solo productos NO vendidos para Inventario
+        const availableProducts = products.filter(product => !product.sold);
+
+        allProducts = availableProducts;
+        displayProducts(availableProducts);
+        updateTotalProducts(availableProducts);
     } catch (error) {
         console.error("Error al cargar productos:", error);
-        alert("No se pudieron cargar los productos. Por favor, inicia sesión nuevamente.");
+        alert("No se pudieron cargar los productos.");
     }
 }
+
 
 function displayProducts(products) {
     productsList.innerHTML = "";
