@@ -51,7 +51,7 @@ const SaleSchema = new mongoose.Schema({
     },
     clientAddress: {  // Dirección del cliente
         type: String,
-        required: true,  // Puedes hacerlo opcional si lo deseas
+        required: false,  // Puedes hacerlo opcional si lo deseas
         trim: true
     }
 
