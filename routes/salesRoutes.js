@@ -77,11 +77,9 @@ router.get("/settled", auth, async (req, res) => {
 // Crear nueva venta
 router.post("/new", auth, async (req, res) => {
     try {
-        const { clientName, productName, saleDate, price, installments, advancePayment } = req.body;
+        const { clientName, productName, saleDate, price, installments, advancePayment, clientAddress } = req.body;
 
-        if (!clientName || !productName || !saleDate || !price) {
-            return res.status(400).json({ error: "Todos los campos son obligatorios" });
-        }
+
 
         const sale = new Sale({
             clientName,
@@ -90,6 +88,7 @@ router.post("/new", auth, async (req, res) => {
             price,
             installments,
             advancePayment,
+            clientAddress,  // Asegúrate de incluir la dirección aquí
             user: req.user.id
         });
 
@@ -103,7 +102,7 @@ router.post("/new", auth, async (req, res) => {
 
 // Actualizar una venta
 router.put("/:id", auth, async (req, res) => {
-    const { clientName, productName, saleDate, price, installments } = req.body;
+    const { clientName, productName, saleDate, price, installments, clientAddress } = req.body;
 
     try {
         const sale = await Sale.findOne({ _id: req.params.id, user: req.user.id });
@@ -118,6 +117,7 @@ router.put("/:id", auth, async (req, res) => {
         sale.saleDate = saleDate;
         sale.price = price;
         sale.installments = installments;
+        sale.clientAddress = clientAddress;  // Asegúrate de actualizar la dirección
 
         await sale.save();
         res.json(sale);
