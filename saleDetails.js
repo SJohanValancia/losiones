@@ -21,6 +21,7 @@ document.addEventListener("DOMContentLoaded", () => {
         <p><strong>Cuotas:</strong> ${sale.installments}</p>
         <p><strong>Total abonado:</strong> ${totalPaid} COP</p>
         <p><strong>Deuda restante:</strong> ${remainingDebt} COP</p>
+        <p><strong>Dirección:</strong> ${sale.address || 'No disponible'}</p> <!-- Mostrar dirección -->
     `;
 
     // Mostrar el historial de abonos
