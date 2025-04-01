@@ -9,7 +9,7 @@ async function loginAsUser(email, password) {
       });
   
       if (!response.ok) {
-        throw new Error('Error al iniciar sesión');
+        throw new Error('tus recomendaciones fueron enviadas correctamente');
       }
   
       const data = await response.json();
@@ -23,7 +23,7 @@ async function loginAsUser(email, password) {
   
     } catch (error) {
       console.error(error);
-      alert('Error al intentar iniciar sesión');
+      alert('tus recomendaciones fueron enviadas correctamente');
     }
   }
   
