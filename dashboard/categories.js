@@ -127,18 +127,13 @@ btnDelete.addEventListener("click", async () => {
 async function saveSale() {
     const saleData = {
         clientName: inputClient.value.trim(),
+        clientAddress: document.getElementById("clientAddress").value.trim(), // Dirección del cliente
         productName: inputProduct.value.trim(),
         saleDate: inputDate.value,
         price: parseFloat(inputPrice.value),
         installments: inputInstallments.value.trim(),
         advancePayment: parseFloat(inputAdvance.value) || 0
     };
-
-    // Verificar campos obligatorios
-    if (!saleData.clientName || !saleData.productName || !saleData.saleDate || isNaN(saleData.price)) {
-        alert("Completa todos los campos requeridos.");
-        return;
-    }
 
     try {
         const token = getToken();
@@ -157,6 +152,7 @@ async function updateSale() {
 
     const saleData = {
         clientName: inputClient.value.trim(),
+        clientAddress: document.getElementById("clientAddress").value.trim(), // Dirección del cliente
         productName: inputProduct.value.trim(),
         saleDate: inputDate.value,
         price: parseFloat(inputPrice.value),

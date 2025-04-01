@@ -1,21 +1,12 @@
-const mongoose = require("mongoose");
-
-const PaymentSchema = new mongoose.Schema({
-    amount: {
-        type: Number,
-        required: true
-    },
-    date: {
-        type: Date,
-        required: true,
-        default: Date.now
-    }
-});
-
 const SaleSchema = new mongoose.Schema({
     clientName: {
         type: String,
         required: true,
+        trim: true
+    },
+    clientAddress: {  // Nuevo campo para dirección
+        type: String,
+        required: true,  // Cambia esto a `false` si no es obligatorio
         trim: true
     },
     productName: {
@@ -41,25 +32,12 @@ const SaleSchema = new mongoose.Schema({
         ref: "User",
         required: true
     },
-
-    settled: {  // Añadir este campo
+    settled: {
         type: Boolean,
         default: false
     },
-    settledDate: {  // Fecha de liquidación
+    settledDate: {
         type: Date,
         default: null
     }
-
 }, { timestamps: true });
-
-// Método virtual para calcular el total abonado
-SaleSchema.virtual('totalPaid').get(function() {
-    return this.payments.reduce((sum, payment) => sum + payment.amount, 0);
-});
-
-// Asegurarse de que los virtuals se incluyan cuando el documento se convierte a JSON
-SaleSchema.set('toJSON', { virtuals: true });
-SaleSchema.set('toObject', { virtuals: true });
-
-module.exports = mongoose.model("Sale", SaleSchema);
