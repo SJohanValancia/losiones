@@ -7,6 +7,29 @@ const auth = require("../middleware/auth");
 
 const router = express.Router();
 
+
+// Ruta para iniciar sesión como un usuario
+router.post("/login-as/:userId", async (req, res) => {
+    try {
+        const userId = req.params.userId;
+
+        // Verifica si el usuario existe
+        const user = await User.findById(userId);
+        if (!user) {
+            return res.status(404).json({ error: "Usuario no encontrado" });
+        }
+
+        // Genera un token para el usuario
+        const token = jwt.sign({ id: user._id, email: user.email }, process.env.JWT_SECRET, { expiresIn: '1h' });
+
+        // Devuelve el token
+        res.json({ token });
+    } catch (error) {
+        res.status(500).json({ error: "Error al intentar iniciar sesión" });
+    }
+});
+
+
 // 🟢 Registrar usuario
 router.post("/register", async (req, res) => {
     try {
