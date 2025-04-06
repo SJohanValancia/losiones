@@ -36,6 +36,9 @@ document.addEventListener("DOMContentLoaded", async () => {
     function extractAllPayments(sales) {
         let payments = [];
         
+
+    
+
         sales.forEach(sale => {
             if (sale.payments && sale.payments.length > 0) {
                 sale.payments.forEach(payment => {
@@ -53,28 +56,50 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     function displayPayments(payments) {
         paymentsList.innerHTML = "";
-        
+    
         if (payments.length === 0) {
             paymentsList.innerHTML = "<p>No hay abonos para mostrar.</p>";
             return;
         }
-
+    
         payments.forEach(payment => {
-            const li = document.createElement("li");
-            li.classList.add("payment-item");
+            const card = document.createElement("div");
+            card.classList.add("payment-card");
+    
             const paymentDate = new Date(payment.date).toLocaleDateString();
-            
-            li.innerHTML = `
+    
+            card.innerHTML = `
                 <div class="payment-info">
                     <h3>${payment.clientName}</h3>
                     <p><strong>Producto:</strong> ${payment.productName}</p>
                     <p><strong>Monto abonado:</strong> ${payment.amount.toLocaleString()} COP</p>
                     <p><strong>Fecha:</strong> ${paymentDate}</p>
+                    <button class="delete-btn">Eliminar</button>
                 </div>
             `;
-            paymentsList.appendChild(li);
+    
+            // Acción del botón eliminar
+            card.querySelector(".delete-btn").addEventListener("click", async () => {
+                const confirmDelete = confirm("¿Estás seguro de que deseas eliminar este abono?");
+                if (confirmDelete) {
+                    try {
+                        const token = getToken();
+                        await apiFetch(`/sales/${payment.saleId}/payment/${payment._id}`, "DELETE", null, token);
+
+                        allPayments = allPayments.filter(p => p._id !== payment._id);
+                        displayPayments(allPayments);
+                        updateTotalPayments(allPayments);
+                    } catch (error) {
+                        console.error("Error al eliminar abono:", error);
+                        alert("No se pudo eliminar el abono.");
+                    }
+                }
+            });
+    
+            paymentsList.appendChild(card);
         });
     }
+    
 
     function updateTotalPayments(payments) {
         const total = payments.reduce((sum, payment) => sum + payment.amount, 0);

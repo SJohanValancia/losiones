@@ -4,6 +4,7 @@ import { getToken } from "./utils/auth.js";
 document.addEventListener("DOMContentLoaded", async () => {
     const salesHistory = document.getElementById("salesHistory");
     const searchInput = document.getElementById("searchInput");
+    const dateInput = document.getElementById("dateFilter");
     const totalDebtElement = document.getElementById("totalDebt");
     let sales = [];
 
@@ -11,43 +12,46 @@ document.addEventListener("DOMContentLoaded", async () => {
         const token = getToken();
         sales = await apiFetch("/sales", "GET", null, token);
 
-        // Filter out settled sales
         const unsettledSales = sales.filter(sale => !sale.settled);
         
         displaySales(unsettledSales);
         updateTotalDebt(unsettledSales);
 
-        // Filtrar las ventas mientras se escribe en el campo de búsqueda
+        // Filtro por nombre
         searchInput.addEventListener("input", () => {
             const searchText = searchInput.value.toLowerCase().trim();
+            const filtered = filterSales(unsettledSales, searchText, dateInput.value);
+            displaySales(filtered);
+            updateTotalDebt(filtered);
+        });
 
-            if (searchText === "") {
-                displaySales(unsettledSales);
-                updateTotalDebt(unsettledSales);
-            } else {
-                const filteredSales = unsettledSales.filter(sale => 
-                    sale.clientName.toLowerCase().includes(searchText)
-                );
-
-                if (filteredSales.length > 0) {
-                    displaySales(filteredSales);
-                    updateTotalDebt(filteredSales);
-                } else {
-                    salesHistory.innerHTML = "<p>No existe esa venta.</p>";
-                    updateTotalDebt([]);
-                }
-            }
+        // Filtro por fecha
+        dateInput.addEventListener("change", () => {
+            const searchText = searchInput.value.toLowerCase().trim();
+            const filtered = filterSales(unsettledSales, searchText, dateInput.value);
+            displaySales(filtered);
+            updateTotalDebt(filtered);
         });
 
     } catch (error) {
         console.error("Error al cargar el historial de ventas:", error);
-        salesHistory.innerHTML = "<p>No se pudieron cargar las ventas, vuelvalo a intentar.</p>";
+        salesHistory.innerHTML = "<p>No se pudieron cargar las ventas, vuelva a intentarlo.</p>";
     }
 });
 
+function filterSales(salesList, searchText, dateFilter) {
+    return salesList.filter(sale => {
+        const matchesName = sale.clientName.toLowerCase().includes(searchText);
+        const matchesDate = dateFilter
+            ? new Date(sale.saleDate).toISOString().split("T")[0] === dateFilter
+            : true;
+        return matchesName && matchesDate;
+    });
+}
+
 function displaySales(salesList) {
     const salesHistory = document.getElementById("salesHistory");
-    salesHistory.innerHTML = ""; // Limpiar antes de actualizar
+    salesHistory.innerHTML = "";
 
     if (salesList.length === 0) {
         salesHistory.innerHTML = "<p>No hay ventas pendientes para mostrar.</p>";
@@ -62,7 +66,7 @@ function displaySales(salesList) {
         li.classList.add("sale-item");
 
         li.innerHTML = `
-            <span>${sale.clientName} - ${sale.productName} - ${remainingDebt} COP</span>
+            <span>${sale.clientName} - ${sale.productName} - ${remainingDebt.toLocaleString()} COP</span>
             <div class="buttons-container">
                 <button class="info btn">Info</button>
                 <button class="edit btn">volver</button>
@@ -78,8 +82,6 @@ function displaySales(salesList) {
 
         salesHistory.appendChild(li);
     });
-
-    updateTotalDebt(salesList); // Actualizar el total de deudas después de mostrar ventas
 }
 
 function updateTotalDebt(salesList) {
@@ -106,11 +108,7 @@ async function deleteSale(id, listItem) {
         await apiFetch(`/sales/${id}`, "DELETE", null, token);
         listItem.remove();
         alert("Venta eliminada correctamente.");
-        
-        // Reload the sales data to update the total debt
-        const sales = await apiFetch("/sales", "GET", null, token);
-        const unsettledSales = sales.filter(sale => !sale.settled);
-        updateTotalDebt(unsettledSales);
+        location.reload();
     } catch (error) {
         console.error("Error al eliminar la venta:", error);
         alert("No se pudo eliminar la venta, vuelva a intentarlo.");
@@ -125,11 +123,7 @@ async function settleSale(id, listItem) {
         await apiFetch(`/sales/${id}/settle`, "PATCH", null, token);
         listItem.remove();
         alert("Venta liquidada correctamente.");
-        
-        // Reload the sales data to update the total debt
-        const sales = await apiFetch("/sales", "GET", null, token);
-        const unsettledSales = sales.filter(sale => !sale.settled);
-        updateTotalDebt(unsettledSales);
+        location.reload();
     } catch (error) {
         console.error("Error al liquidar la venta:", error);
         alert("No se pudo liquidar la venta, vuelva a intentarlo.");

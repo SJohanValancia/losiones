@@ -277,10 +277,10 @@ body {
 
 }
 
-#searchInput {
+#searchInput  {
 
   margin-right: -300px;
-  transform: translateY(-260px);
+  transform: translateY(-280px);
   width: 250px;
   padding: 10px;
   font-size: 16px;
@@ -289,6 +289,22 @@ body {
   outline: none;
   transition: all 0.3s ease;
   box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+#dateFilter{
+
+  position: absolute;
+  margin-right: 10px;
+  transform: translateY(-220px);
+  width: 250px;
+  padding: 10px;
+  font-size: 16px;
+  border: 2px solid #ccc;
+  border-radius: 8px;
+  outline: none;
+  transition: all 0.3s ease;
+  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+
 }
 
 #searchInput:focus {

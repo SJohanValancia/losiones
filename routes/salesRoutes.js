@@ -3,6 +3,59 @@ const auth = require("../middleware/auth");
 const Sale = require("../models/Sale");
 const router = express.Router();
 
+// Eliminar un abono específico de una venta
+router.delete("/:saleId/payment/:paymentId", auth, async (req, res) => {
+    try {
+        const { saleId, paymentId } = req.params;
+
+        const sale = await Sale.findOne({ _id: saleId, user: req.user.id });
+        if (!sale) {
+            return res.status(404).json({ error: "Venta no encontrada" });
+        }
+
+        // Filtrar el abono que se desea eliminar
+        const initialLength = sale.payments.length;
+        sale.payments = sale.payments.filter(p => p._id.toString() !== paymentId);
+
+        if (sale.payments.length === initialLength) {
+            return res.status(404).json({ error: "Abono no encontrado" });
+        }
+
+        await sale.save();
+        res.json({ message: "Abono eliminado correctamente" });
+    } catch (error) {
+        console.error("Error al eliminar el abono:", error);
+        res.status(500).json({ error: "Error al eliminar el abono" });
+    }
+});
+
+
+// Obtener ventas por fecha (exacta)
+router.get("/by-date/:date", auth, async (req, res) => {
+    try {
+        const userId = req.user.id;
+        const dateParam = new Date(req.params.date);
+
+        // Obtener inicio y fin del día
+        const startOfDay = new Date(dateParam.setHours(0, 0, 0, 0));
+        const endOfDay = new Date(dateParam.setHours(23, 59, 59, 999));
+
+        const sales = await Sale.find({
+            user: userId,
+            saleDate: {
+                $gte: startOfDay,
+                $lte: endOfDay
+            }
+        });
+
+        res.json(sales);
+    } catch (error) {
+        console.error("Error al filtrar por fecha:", error);
+        res.status(500).json({ error: "Error al obtener ventas por fecha" });
+    }
+});
+
+
 // Obtener todas las ventas (liquidadas y no liquidadas)
 router.get("/all", auth, async (req, res) => {
     try {
