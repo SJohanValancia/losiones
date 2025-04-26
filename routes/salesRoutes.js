@@ -1,6 +1,7 @@
 const express = require("express");
 const auth = require("../middleware/auth");
 const Sale = require("../models/Sale");
+const salesController = require('../controllers/salesController');
 const router = express.Router();
 
 // Eliminar un abono específico de una venta
@@ -19,6 +20,15 @@ router.delete("/:saleId/payment/:paymentId", auth, async (req, res) => {
 
         if (sale.payments.length === initialLength) {
             return res.status(404).json({ error: "Abono no encontrado" });
+        }
+
+        // Si estaba liquidada, verificar si aún debería estarlo
+        if (sale.settled) {
+            const totalPaid = sale.payments.reduce((sum, payment) => sum + payment.amount, 0);
+            if (totalPaid < sale.price) {
+                sale.settled = false;
+                sale.settledDate = null;
+            }
         }
 
         await sale.save();
@@ -82,25 +92,6 @@ router.delete("/:id/settled", auth, async (req, res) => {
 });
 
 
-// Marcar una venta como liquidada
-router.patch("/:id/settle", auth, async (req, res) => {
-    try {
-        const sale = await Sale.findOne({ _id: req.params.id, user: req.user.id });
-
-        if (!sale) {
-            return res.status(404).json({ error: "Venta no encontrada" });
-        }
-
-        // Marcar como liquidada
-        sale.settled = true;
-        sale.settledDate = new Date();
-
-        await sale.save();
-        res.json(sale);
-    } catch (error) {
-        res.status(500).json({ error: "Error al liquidar la venta" });
-    }
-});
 
 // Obtener todas las ventas, excluyendo las liquidadas
 router.get("/", auth, async (req, res) => {
@@ -127,12 +118,15 @@ router.get("/settled", auth, async (req, res) => {
     }
 });
 
+
+
 // Crear nueva venta
 router.post("/new", auth, async (req, res) => {
     try {
         const { clientName, productName, saleDate, price, installments, advancePayment, clientAddress } = req.body;
 
-
+        // Verificar si el pago inicial (advancePayment) es igual o mayor que el precio total
+        const initiallySettled = advancePayment >= price;
 
         const sale = new Sale({
             clientName,
@@ -141,8 +135,12 @@ router.post("/new", auth, async (req, res) => {
             price,
             installments,
             advancePayment,
-            clientAddress,  // Asegúrate de incluir la dirección aquí
-            user: req.user.id
+            clientAddress,
+            user: req.user.id,
+            // Si el pago inicial cubre el precio total, marcar como liquidada inmediatamente
+            settled: initiallySettled,
+            settledDate: initiallySettled ? new Date() : null,
+            payments: advancePayment > 0 ? [{ amount: advancePayment, date: new Date() }] : []
         });
 
         await sale.save();
@@ -170,7 +168,21 @@ router.put("/:id", auth, async (req, res) => {
         sale.saleDate = saleDate;
         sale.price = price;
         sale.installments = installments;
-        sale.clientAddress = clientAddress;  // Asegúrate de actualizar la dirección
+        sale.clientAddress = clientAddress;
+
+        // Verificar si con el nuevo precio, la venta debería actualizarse a liquidada o no
+        const totalPaid = sale.payments.reduce((sum, payment) => sum + payment.amount, 0);
+        
+        // Si bajamos el precio y los pagos ya cubren el nuevo precio
+        if (totalPaid >= price && !sale.settled) {
+            sale.settled = true;
+            sale.settledDate = new Date();
+        } 
+        // Si subimos el precio y los pagos ya no cubren el nuevo precio
+        else if (totalPaid < price && sale.settled) {
+            sale.settled = false;
+            sale.settledDate = null;
+        }
 
         await sale.save();
         res.json(sale);
@@ -179,7 +191,7 @@ router.put("/:id", auth, async (req, res) => {
     }
 });
 
-// Agregar un nuevo abono
+
 router.post("/:id/payment", auth, async (req, res) => {
     const { amount, date } = req.body;
 
@@ -194,18 +206,46 @@ router.post("/:id/payment", auth, async (req, res) => {
             return res.status(404).json({ error: "Venta no encontrada" });
         }
 
-        // Agregamos el nuevo abono
+        // Si ya está liquidada no permitir más pagos
+        if (sale.settled) {
+            return res.status(400).json({ error: "La venta ya está liquidada, no puedes agregar más pagos" });
+        }
+
+        // Agregar el nuevo abono
         sale.payments.push({
             amount,
             date: date || new Date()
         });
 
+        // 💥 Aquí recalculamos bien el total pagado
+        const totalPaid = sale.payments.reduce((sum, payment) => sum + payment.amount, 0);
+
+        let justSettled = false;
+
+        // 💥 Aquí marcamos como liquidada si pagó todo
+        if (totalPaid >= sale.price) {
+            sale.settled = true;
+            sale.settledDate = new Date();
+            justSettled = true;
+        }
+
         await sale.save();
-        res.json(sale);
+
+        // Devolver respuesta correcta
+        res.json({
+            settled: sale.settled,
+            justSettled,
+            remainingDebt: Math.max(0, sale.price - totalPaid),
+            totalPaid: totalPaid,
+            saleId: sale._id
+        });
     } catch (error) {
+        console.error("Error al agregar el abono:", error);
         res.status(500).json({ error: "Error al agregar el abono" });
     }
 });
+
+
 
 // Eliminar una venta
 router.delete("/:id", auth, async (req, res) => {

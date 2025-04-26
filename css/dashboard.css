@@ -713,7 +713,7 @@ h1, h2 {
   background: rgba(255, 255, 255, 0.1);
   border: 1px solid rgba(255, 255, 255, 0.2);
   color: var(--primary-color);
-  width: 380px;
+  width: 360px;
   height: 60px;
   border-radius: 50%;
   display: flex;
