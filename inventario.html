@@ -223,13 +223,25 @@
     <input type="text" id="searchInput" placeholder="🔍 Buscar producto por nombre..." />
 
     <div id="inventario" class="container">
-        <nav id="navbar" class="navbar">
-            <ul>
-                <li><a href="categories.html">Registro</a></li>
-                <li><a href="productos.html">Agregar Producto</a></li>
-                <li><a href="vendidos.html">Productos vendidos</a></li>
-            </ul>
-        </nav>
+        <div class="navbar-wrapper">
+            <div class="backdrop" id="backdrop"></div>
+          
+            
+            <nav class="navbar-menu" id="navbar">
+              <button class="menu-toggle" id="menuToggle">☰</button>
+              <div class="menu-items" id="menuItems">
+                <a href="categories.html" >agregar cliente</a>
+                <a href="liquidados.html">Liquidados</a>
+                <a href="productos.html">Agregar Producto</a>          <a href="categories.html">Registro</a>
+                <a href="categories.html">registrar cliente</a>
+                <a href="vendidos.html">Productos Vendidos</a>
+               
+                
+              </div>
+              
+            </nav>
+          </div>
+      
 
         <div class="list-container">
             <h1>Inventario de Productos</h1>
