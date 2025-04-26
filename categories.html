@@ -32,17 +32,34 @@
 
 
     <div class="container">
-      <nav id="navbar" class="navbar">
-        <ul>
+
+
+      
+    <div class="navbar-wrapper">
+      <div class="backdrop" id="backdrop"></div>
+    
+      
+      <nav class="navbar-menu" id="navbar">
+        <button class="menu-toggle" id="menuToggle">☰</button>
+        <div class="menu-items" id="menuItems">
+          <a href="historial.html" >Historial</a>
+          <a href="liquidados.html">Liquidados</a>
+          <a href="productos.html">Agregar Producto</a>         
+          <a href="inventario.html">Inventario</a>
+          <a href="vendidos.html">Productos Vendidos</a>
+         
           
-          <li><a href="historial.html" >Historial</a></li>
-          <li><a href="liquidados.html">Liquidados</a></li>
-          <li><a href="productos.html">Agregar Producto</a></li>
-
-        </ul>
+        </div>
+        
       </nav>
+    </div>
 
+    
+
+    <div class="busqueda-centrada" >
       <input type="text" id="searchInput" placeholder="🔍 Buscar cliente por nombre..." />
+      </div>
+
 
       <h1>Registro de Ventas</h1>
 

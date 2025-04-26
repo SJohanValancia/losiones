@@ -5,28 +5,403 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Historial de Liquidados</title>
     <link rel="stylesheet" href="css/dashboard.css">
+    <style>
+        .sales-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 25px;
+            padding: 20px 0;
+            list-style: none;
+        }
+
+        .sale-item {
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .sale-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+            background: rgba(255, 255, 255, 0.12);
+        }
+        
+        .sale-item.deleting {
+            transform: scale(0.95);
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .sale-header {
+            padding: 15px 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(0, 0, 0, 0.15);
+        }
+
+        .client-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .client-info h3 {
+            margin: 0;
+            font-size: 18px;
+            font-weight: 600;
+            color: #fff;
+        }
+
+        .status-badge {
+            background: rgba(32, 227, 178, 0.2);
+            color: #20E3B2;
+            padding: 4px 10px;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 600;
+            border: 1px solid rgba(32, 227, 178, 0.3);
+        }
+
+        .product-name {
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.7);
+            margin-top: 5px;
+        }
+
+        .sale-details {
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .detail-row {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .detail-group {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .detail-label {
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 14px;
+        }
+
+        .detail-value {
+            font-weight: 600;
+            font-size: 16px;
+            color: #fff;
+        }
+
+        .detail-value.price {
+            color: #FFD60A;
+            font-size: 22px;
+        }
+
+        .dates-container {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            background: rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            padding: 15px;
+            margin-top: 10px;
+        }
+
+        .date-group {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .date-icon {
+            font-size: 20px;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+        }
+
+        .date-info {
+            display: flex;
+            flex-direction: column;
+            gap: 3px;
+        }
+
+        .date-label {
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .date-value {
+            font-size: 14px;
+            font-weight: 600;
+            color: #fff;
+        }
+
+        .date-arrow {
+            text-align: center;
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.5);
+            padding: 5px 0;
+        }
+
+        .date-group.settled .date-icon {
+            background: rgba(32, 227, 178, 0.2);
+            color: #20E3B2;
+        }
+
+        .card-actions {
+            margin-top: auto;
+            padding: 15px 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(0, 0, 0, 0.1);
+        }
+
+        .delete-btn {
+            width: 100%;
+            padding: 10px;
+            background: rgba(255, 59, 59, 0.2);
+            color: #FF3B3B;
+            border: 1px solid rgba(255, 59, 59, 0.3);
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .delete-btn:hover {
+            background: rgba(255, 59, 59, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .delete-btn i {
+            font-size: 16px;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .empty-state i {
+            font-size: 50px;
+            margin-bottom: 20px;
+            opacity: 0.5;
+        }
+
+        .empty-state h3 {
+            font-size: 24px;
+            font-weight: 500;
+            margin-bottom: 10px;
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        .empty-state p {
+            font-size: 16px;
+            max-width: 400px;
+            margin: 0 auto;
+        }
+
+        .loading-spinner {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100px;
+        }
+
+        .loading-spinner i {
+            animation: spin 1.5s infinite linear;
+            font-size: 30px;
+            color: #20E3B2;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .pagination {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 30px;
+        }
+
+        .page-btn {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: white;
+            padding: 8px 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .page-btn:hover, .page-btn.active {
+            background: rgba(32, 227, 178, 0.2);
+            border-color: rgba(32, 227, 178, 0.3);
+            color: #20E3B2;
+        }
+
+        .empty-message {
+            color: #FFFFFF;
+            font-size: 16px;
+            text-align: center;
+            width: 100%;
+            padding: 20px;
+        }
+
+        #searchInput {
+            width: 100%;
+            max-width: 400px;
+            margin: 20px auto;
+            display: block;
+            padding: 12px 20px;
+            border-radius: 15px;
+            background: rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: white;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+
+        #searchInput:focus {
+            box-shadow: 0 0 0 3px rgba(114, 134, 253, 0.2);
+            border-color: var(--primary-color);
+            outline: none;
+        }
+
+        #searchInput::placeholder {
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        #totalLiquidatedContainer {
+            background: rgba(32, 227, 178, 0.1);
+            border-radius: 15px;
+            padding: 15px;
+            margin: 20px auto;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            border: 1px solid rgba(32, 227, 178, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        #totalLiquidatedContainer:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        #totalLiquidatedContainer h2 {
+            margin: 0;
+            color: var(--success);
+        }
+
+        .navbar {
+            margin-bottom: 30px;
+        }
+
+        .navbar ul {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            padding: 0;
+            list-style: none;
+        }
+
+        .navbar a {
+            color: white;
+            text-decoration: none;
+            font-weight: 600;
+            padding: 10px 20px;
+            border-radius: 10px;
+            background: rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+            display: block;
+        }
+
+        .navbar a:hover {
+            background: var(--primary-color);
+            transform: translateY(-3px);
+        }
+
+        @media (max-width: 768px) {
+            .sales-list {
+                grid-template-columns: 1fr;
+            }
+            
+            .navbar ul {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+    </style>
 </head>
 <body>
 
-   
-
+    <div id="totalLiquidatedContainer">
+        <h2>✅ Total Liquidado: <span id="totalLiquidated">0</span> </h2>
+    </div>
     <div id="historial" class="container">
-
-        <nav id="navbar" class="navbar">
-            <ul>
+        <div class="navbar-wrapper">
+            <div class="backdrop" id="backdrop"></div>
+          
+            
+            <nav class="navbar-menu" id="navbar">
+              <button class="menu-toggle" id="menuToggle">☰</button>
+              <div class="menu-items" id="menuItems">
+                <a href="historial.html" >Historial</a>
+                <a href="liquidados.html">Liquidados</a>
+                <a href="productos.html">Agregar Producto</a>         
+                <a href="inventario.html">Inventario</a>
+                <a href="vendidos.html">Productos Vendidos</a>
+               
+                
+              </div>
               
-                <li><a href="categories.html">Registro</a></li>
-            </ul>
-          </nav>
-
-          <input type="text" id="searchInput" placeholder="🔍 Buscar cliente por nombre..." />
+            </nav>
+          </div>
+        
 
         <h1>Historial de Liquidados</h1>
+        
+        <input type="text" id="searchInput" placeholder="🔍 Buscar cliente por nombre..." />
+        
         <ul id="liquidatedHistory" class="sales-list"></ul>
-    </div>
+        
+        <div id="pagination" class="pagination">
+            <!-- Los botones de paginación se generarán con JavaScript -->
+        </div>
 
-    <div id="totalDebtContainer">
-        <h2>✅ Total Liquidado: <span id="totalLiquidated">0</span> </h2>
+        <div id="emptyState" class="empty-state" style="display: none;">
+            <i class="far fa-folder-open"></i>
+            <h3>No hay registros liquidados</h3>
+            <p>Aún no se han liquidado ventas o no hay coincidencias con tu búsqueda.</p>
+        </div>
+
+        <div id="loadingSpinner" class="loading-spinner">
+            <i class="fas fa-spinner"></i>
+        </div>
     </div>
 
     <script type="module" src="liquidados.js"></script>

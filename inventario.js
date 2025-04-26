@@ -25,10 +25,14 @@ async function loadProducts() {
         updateTotalProducts(availableProducts);
     } catch (error) {
         console.error("Error al cargar productos:", error);
-        alert("No se pudieron cargar los productos.");
+        productsList.innerHTML = `
+            <li class="error-message">
+                <div class="error-icon">❌</div>
+                <p>No se pudieron cargar los productos. Intenta nuevamente.</p>
+            </li>
+        `;
     }
 }
-
 
 function displayProducts(products) {
     productsList.innerHTML = "";
@@ -43,17 +47,36 @@ function displayProducts(products) {
 
     products.forEach(product => {
         const li = document.createElement("li");
+        
+        // Calcular la ganancia y el porcentaje de ganancia
+        const profit = product.salePrice - product.costPrice;
+        const profitPercentage = Math.round((profit / product.costPrice) * 100);
 
         li.innerHTML = `
             <div class="product-info">
                 <h3>${product.name}</h3>
-                
-                <p><strong>Precio de venta:</strong> ${product.salePrice.toLocaleString()} COP</p>
-                
+                <div class="product-details">
+                    <div class="price-tag">
+                        <span class="price-label">Precio de costo:</span>
+                        <span class="price-value">${product.costPrice.toLocaleString()} COP</span>
+                    </div>
+                    <div class="price-tag">
+                        <span class="price-label">Precio de venta:</span>
+                        <span class="price-value">${product.salePrice.toLocaleString()} COP</span>
+                    </div>
+                    <div class="price-tag profit">
+                        <span class="price-label">Ganancia estimada:</span>
+                        <span class="price-value">${profit.toLocaleString()} COP (${profitPercentage}%)</span>
+                    </div>
+                </div>
             </div>
             <div class="buttons-container">
-                <button class="edit btn">Editar</button>
-                <button class="sell btn" ${product.sold ? "disabled" : ""}>Vendido</button>
+                <button class="edit btn">
+                    <span class="btn-icon">✏️</span> Editar
+                </button>
+                <button class="sell btn" ${product.sold ? "disabled" : ""}>
+                    <span class="btn-icon">✅</span> Marcar vendido
+                </button>
             </div>
         `;
 
@@ -68,11 +91,23 @@ function displayProducts(products) {
                     const token = getToken();
                     await apiFetch(`/products/${product._id}/sell`, "PUT", null, token);
                     sellButton.disabled = true;
-                    alert("Producto marcado como vendido");
-                    loadProducts(); // Recargar productos
+                    sellButton.innerHTML = '<span class="btn-icon">✓</span> Vendido';
+                    sellButton.classList.add("sold");
+                    
+                    // Recargar después de un breve retraso para mostrar la retroalimentación visual
+                    setTimeout(() => {
+                        loadProducts();
+                    }, 800);
                 } catch (error) {
                     console.error("Error al marcar como vendido:", error);
-                    alert("No se pudo marcar el producto como vendido.");
+                    sellButton.innerHTML = '<span class="btn-icon">❌</span> No se pudo marcar';
+                    sellButton.classList.add("error");
+                    
+                    // Restaurar el botón después de un momento
+                    setTimeout(() => {
+                        sellButton.innerHTML = '<span class="btn-icon">✅</span> Marcar vendido';
+                        sellButton.classList.remove("error");
+                    }, 2000);
                 }
             });
         }
@@ -107,3 +142,17 @@ searchInput.addEventListener("input", filterProducts);
 
 // Load data on page load
 document.addEventListener("DOMContentLoaded", loadProducts);
+
+const menuToggle = document.getElementById('menuToggle');
+const menuItems = document.getElementById('menuItems');
+const backdrop = document.getElementById('backdrop');
+
+menuToggle.addEventListener('click', () => {
+  menuItems.classList.toggle('show');
+  backdrop.classList.toggle('show');
+});
+
+backdrop.addEventListener('click', () => {
+  menuItems.classList.remove('show');
+  backdrop.classList.remove('show');
+});
