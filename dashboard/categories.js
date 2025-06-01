@@ -65,6 +65,13 @@ async function loadSales(query = "") {
         console.error("Error al cargar ventas:", error);
         list.innerHTML = `<li class="empty-list">No se pudieron cargar las ventas. Error: ${error.message}</li>`;
     }
+
+    // Esperar 2 segundos para dar tiempo a que Render se active completamente
+setTimeout(() => {
+  loadPrestamos();
+}, 2000); // puedes ajustar a 3000 si aún se tarda
+
+
 }
 
 function viewSaleDetails(sale) {
