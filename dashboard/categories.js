@@ -1,6 +1,6 @@
 import { apiFetch } from "../utils/api.js";
 import { getToken } from "../utils/auth.js";
-import "./keepAlive.js";
+import "../keepAlive.js";
 
 // Referencias a elementos del DOM
 const form = document.getElementById("salesForm");
