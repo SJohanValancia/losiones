@@ -68,8 +68,47 @@ async function mantenerActivoRender() {
   }
 }
 
-// Ejecutar ahora
-mantenerActivoRender();
+// Variables para controlar inactividad y ping periódico
+let tiempoInactividad;
+let intervaloPing;
+const tiempoLimite = 5 * 60 * 1000; // 5 minutos
 
-// Repetir cada 5 minutos
-setInterval(mantenerActivoRender, 5 * 60 * 1000);
+function comenzarPingPeriodico() {
+  // Evita duplicar intervalos
+  if (intervaloPing) return;
+
+  console.log("⏳ Usuario inactivo. Comenzando pings periódicos...");
+  mantenerActivoRender(); // Ejecutar inmediatamente
+
+  intervaloPing = setInterval(() => {
+    mantenerActivoRender();
+  }, tiempoLimite);
+}
+
+function detenerPingPeriodico() {
+  if (intervaloPing) {
+    clearInterval(intervaloPing);
+    intervaloPing = null;
+    console.log("✅ Usuario activo. Pings periódicos detenidos.");
+  }
+}
+
+function resetearTemporizador() {
+  // El usuario está activo, así que detenemos pings periódicos
+  detenerPingPeriodico();
+
+  // Reiniciamos temporizador de inactividad
+  clearTimeout(tiempoInactividad);
+  tiempoInactividad = setTimeout(() => {
+    comenzarPingPeriodico();
+  }, tiempoLimite);
+}
+
+// Escuchar eventos de interacción para resetear el temporizador
+window.addEventListener("mousemove", resetearTemporizador);
+window.addEventListener("keydown", resetearTemporizador);
+window.addEventListener("click", resetearTemporizador);
+window.addEventListener("scroll", resetearTemporizador);
+
+// Iniciar el temporizador por primera vez
+resetearTemporizador();
