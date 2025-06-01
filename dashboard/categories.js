@@ -68,7 +68,6 @@ async function loadSales(query = "") {
 
     // Esperar 2 segundos para dar tiempo a que Render se active completamente
 setTimeout(() => {
-  loadPrestamos();
 }, 2000); // puedes ajustar a 3000 si aún se tarda
 
 
