@@ -1,6 +1,6 @@
 /**
  * CoinLoader - Sistema de animación de carga automático
- * Versión 1.0
+ * Versión 1.1 - Modificado para ignorar requests del bot
  * 
  * Este script crea y gestiona una animación de carga de monedas
  * que se muestra automáticamente durante operaciones AJAX, fetch
@@ -203,6 +203,46 @@
     }
   }
   
+  // Función para verificar si una request es del bot keepAlive
+  function isBotRequest(url, body) {
+    // Verificar si la URL contiene el endpoint de tu API
+    if (url && url.includes('losiones-1.onrender.com/api')) {
+      
+      // Si es un POST a /auth/login, verificar si es el bot
+      if (url.includes('/auth/login')) {
+        try {
+          const parsedBody = typeof body === 'string' ? JSON.parse(body) : body;
+          if (parsedBody && parsedBody.email === 'bot@keepalive.com') {
+            return true;
+          }
+        } catch (e) {
+          // Si hay error al parsear, no es problema
+        }
+      }
+      
+      // Si es un POST a /sales/new, verificar si el cliente es "BOT CLIENT"
+      if (url.includes('/sales/new')) {
+        try {
+          const parsedBody = typeof body === 'string' ? JSON.parse(body) : body;
+          if (parsedBody && parsedBody.clientName === 'BOT CLIENT') {
+            return true;
+          }
+        } catch (e) {
+          // Si hay error al parsear, no es problema
+        }
+      }
+      
+      // Si es un DELETE a /sales/, podría ser el bot limpiando
+      // Verificamos el stack trace para ver si viene de keepAlive
+      const stack = new Error().stack;
+      if (url.includes('/sales/') && url.match(/\/sales\/[a-f0-9]{24}$/) && stack.includes('mantenerActivoRender')) {
+        return true;
+      }
+    }
+    
+    return false;
+  }
+  
   // Textos rotativos para el loader
   const loadingTexts = [
     "Procesando su solicitud...",
@@ -228,7 +268,15 @@
     
     // Interceptar fetch para mostrar/ocultar el loader automáticamente
     const originalFetch = window.fetch;
-    window.fetch = function() {
+    window.fetch = function(url, options = {}) {
+      
+      // Verificar si es una request del bot
+      if (isBotRequest(url, options.body)) {
+        // Si es del bot, no mostrar loader y llamar fetch original
+        return originalFetch.apply(this, arguments);
+      }
+      
+      // Si no es del bot, mostrar loader
       showLoader();
       return originalFetch.apply(this, arguments)
         .then(response => {
@@ -245,14 +293,21 @@
     const originalXhrOpen = XMLHttpRequest.prototype.open;
     const originalXhrSend = XMLHttpRequest.prototype.send;
     
-    XMLHttpRequest.prototype.open = function() {
+    XMLHttpRequest.prototype.open = function(method, url) {
+      this._url = url; // Guardar la URL para verificar después
       return originalXhrOpen.apply(this, arguments);
     };
     
-    XMLHttpRequest.prototype.send = function() {
+    XMLHttpRequest.prototype.send = function(data) {
       const xhr = this;
       
-      // Mostrar loader al enviar la solicitud
+      // Verificar si es una request del bot
+      if (isBotRequest(xhr._url, data)) {
+        // Si es del bot, no mostrar loader
+        return originalXhrSend.apply(xhr, arguments);
+      }
+      
+      // Si no es del bot, mostrar loader
       showLoader();
       
       // Interceptar cuando la solicitud se complete
