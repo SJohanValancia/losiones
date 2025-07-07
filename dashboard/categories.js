@@ -21,6 +21,8 @@ const btnAddPayment = document.getElementById("addPayment");
 const list = document.getElementById("salesList");
 const searchInput = document.getElementById("searchInput");  // Campo de búsqueda
 
+//
+
 async function loadSales(query = "") {
     try {
         const token = getToken();
