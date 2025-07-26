@@ -38,6 +38,7 @@ async function encriptarContraseñasEnTextoPlano() {
   }
 }
 
+//
 // Llamar la función para encriptar las contraseñas
 encriptarContraseñasEnTextoPlano();
 
