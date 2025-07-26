@@ -26,15 +26,43 @@
       }
     </style>
   </head>
+  <script src="loader.js"></script>
   <body>
-    <div class="container">
-      <nav id="navbar" class="navbar">
-        <ul>
-          
-          <li><a href="historial.html" >Historial</a></li>
 
-        </ul>
+   
+
+
+    <div class="container">
+
+
+      
+    <div class="navbar-wrapper">
+      <div class="backdrop" id="backdrop"></div>
+    
+      
+      <nav class="navbar-menu" id="navbar">
+        <button class="menu-toggle" id="menuToggle">☰</button>
+        <div class="menu-items" id="menuItems">
+          <a href="historial.html" >Historial</a>
+          <a href="abonos.html" >Historial de abonos</a>
+          <a href="liquidados.html">Liquidados</a>
+          <a href="productos.html">Agregar Producto</a>         
+          <a href="inventario.html">Inventario</a>
+          <a href="vendidos.html">Productos Vendidos</a>
+         
+          
+        </div>
+        
       </nav>
+    </div>
+
+    
+
+    <div class="busqueda-centrada" >
+      <input type="text" id="searchInput" placeholder="🔍 Buscar cliente por nombre..." />
+      </div>
+
+
       <h1>Registro de Ventas</h1>
 
       <!-- Formulario de Registro -->
@@ -146,6 +174,35 @@
               <span class="label-char" style="--index: 4">o</span>
             </label>
           </div>
+
+          <div class="wave-group">
+            <input id="clientAddress" required type="text" class="input" />
+            <span class="bar"></span>
+            <label id="direccion-cliente" class="label">
+                <span class="label-char" style="--index: 0">D</span>
+                <span class="label-char" style="--index: 1">i</span>
+                <span class="label-char" style="--index: 2">r</span>
+                <span class="label-char" style="--index: 3">e</span>
+                <span class="label-char" style="--index: 4">c</span>
+                <span class="label-char" style="--index: 5">c</span>
+                <span class="label-char" style="--index: 6">i</span>
+                <span class="label-char" style="--index: 7">ó</span>
+                <span class="label-char" style="--index: 8">n</span>
+                <span class="label-char" style="--index: 9">ㅤ </span>
+                <span class="label-char" style="--index: 10">d</span>
+                <span class="label-char" style="--index: 11">e</span>
+                <span class="label-char" style="--index: 12">l</span>
+                <span class="label-char" style="--index: 13"> ㅤ</span>
+                <span class="label-char" style="--index: 14">C</span>
+                <span class="label-char" style="--index: 15">l</span>
+                <span class="label-char" style="--index: 16">i</span>
+                <span class="label-char" style="--index: 17">e</span>
+                <span class="label-char" style="--index: 18">n</span>
+                <span class="label-char" style="--index: 19">t</span>
+                <span class="label-char" style="--index: 20">e</span>
+            </label>
+        </div>
+        
 
           <!-- Añadir esta sección después del formulario existente -->
 <div id="paymentSection" class="form-container" style="display: none;">

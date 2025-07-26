@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Administrar Productos</title>
+    <link rel="stylesheet" href="css/dashboard.css" />
+    <style>
+      .form-container {
+        background: rgba(255, 255, 255, 0.08);
+        border-radius: 15px;
+        padding: 25px;
+        margin-bottom: 30px;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+      }
+
+      .wave-group {
+        position: relative;
+        margin-bottom: 30px;
+      }
+
+      .wave-group .input {
+        font-size: 16px;
+        padding: 10px 10px 10px 5px;
+        display: block;
+        width: 100%;
+        border: none;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.4);
+        background: transparent;
+        color: #fff;
+      }
+
+      .wave-group .input:focus {
+        outline: none;
+      }
+
+      .wave-group .label {
+        color: rgba(255, 255, 255, 0.6);
+        font-size: 18px;
+        font-weight: normal;
+        position: absolute;
+        pointer-events: none;
+        left: 5px;
+        top: 10px;
+        display: flex;
+        transition: 0.2s ease all;
+      }
+
+      .wave-group .label-char {
+        transition: 0.2s cubic-bezier(0.65, -0.65, 0.265, 1.65) all;
+        transform: translateY(0);
+      }
+
+      .wave-group .input:focus ~ .label .label-char,
+      .wave-group .input:valid ~ .label .label-char {
+        transform: translateY(-30px);
+        font-size: 14px;
+        color: var(--primary-color);
+      }
+
+      .wave-group .bar {
+        position: relative;
+        display: block;
+        width: 100%;
+      }
+
+      .wave-group .bar:before,
+      .wave-group .bar:after {
+        content: "";
+        height: 2px;
+        width: 0;
+        bottom: 0;
+        position: absolute;
+        background: var(--primary-color);
+        transition: 0.2s ease all;
+      }
+
+      .wave-group .bar:before {
+        left: 50%;
+      }
+
+      .wave-group .bar:after {
+        right: 50%;
+      }
+
+      .wave-group .input:focus ~ .bar:before,
+      .wave-group .input:focus ~ .bar:after {
+        width: 50%;
+      }
+
+      .buttons {
+        display: flex;
+        gap: 15px;
+        justify-content: center;
+        flex-wrap: wrap;
+      }
+
+      .buttons button {
+        padding: 12px 25px;
+        border-radius: 10px;
+        background: var(--primary-color);
+        color: white;
+        border: none;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        font-weight: 600;
+        min-width: 120px;
+      }
+
+      .buttons button:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+      }
+
+      #deleteProduct {
+        background: var(--danger);
+      }
+
+      #cancelUpdate {
+        background: var(--warning);
+      }
+
+      .list-container {
+        margin-top: 40px;
+      }
+
+      .list-container h2 {
+        text-align: center;
+        margin-bottom: 25px;
+      }
+
+      .products-list {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+        gap: 20px;
+        padding: 20px;
+        list-style: none;
+        justify-items: center;
+      }
+
+      .products-list li {
+        background: rgba(255, 255, 255, 0.1);
+        padding: 20px;
+        border-radius: 15px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        width: 100%;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+      }
+
+      .products-list li:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+      }
+
+      .product-info h3 {
+        font-size: 18px;
+        margin-bottom: 15px;
+        color: white;
+      }
+
+      .product-info p {
+        margin: 8px 0;
+        color: rgba(255, 255, 255, 0.8);
+      }
+
+      .buttons-container {
+        display: flex;
+        gap: 10px;
+        margin-top: 15px;
+        justify-content: center;
+      }
+
+      .buttons-container button {
+        padding: 8px 15px;
+        border-radius: 8px;
+        background: rgba(0, 0, 0, 0.2);
+        color: white;
+        border: none;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        flex: 1;
+      }
+
+      .buttons-container button:hover {
+        background: var(--primary-color);
+      }
+
+      .navbar {
+        margin-bottom: 30px;
+      }
+
+      .navbar ul {
+        display: flex;
+        justify-content: center;
+        gap: 20px;
+        padding: 0;
+        list-style: none;
+      }
+
+      .navbar a {
+        color: white;
+        text-decoration: none;
+        font-weight: 600;
+        padding: 10px 20px;
+        border-radius: 10px;
+        background: rgba(0, 0, 0, 0.2);
+        transition: all 0.3s ease;
+        display: block;
+      }
+
+      .navbar a:hover {
+        background: var(--primary-color);
+        transform: translateY(-3px);
+      }
+
+      @media screen and (max-width: 768px) {
+        .container {
+          width: 95%;
+          padding: 20px;
+        }
+        
+        .products-list {
+          grid-template-columns: 1fr;
+        }
+        
+        .navbar ul {
+          flex-direction: column;
+          align-items: center;
+        }
+      }
+    </style>
+    <script src="loader.js"></script>
+  </head>
+  <body>
+    <div class="container">
+      <div class="navbar-wrapper">
+        <div class="backdrop" id="backdrop"></div>
+      
+        
+        <nav class="navbar-menu" id="navbar">
+          <button class="menu-toggle" id="menuToggle">☰</button>
+          <div class="menu-items" id="menuItems">
+            <a href="categories.html" >registrar cliente</a>
+            <a href="historial.html" >Historial</a>
+            <a href="abonos.html" >Historial de abonos</a>
+            <a href="liquidados.html">Liquidados</a>
+            <a href="categories.html">registrar cliente</a>         
+            <a href="inventario.html">Inventario</a>
+            <a href="vendidos.html">Productos Vendidos</a>
+           
+            
+          </div>
+          
+        </nav>
+      </div>
+      <h1>Agregar Producto</h1>
+
+      <!-- Formulario de Registro de Producto -->
+      <div class="form-container">
+        <form id="productForm">
+          <input type="hidden" id="productId" value="" />
+          
+          <div class="wave-group">
+            <input id="productName" required type="text" class="input" />
+            <span class="bar"></span>
+            <label class="label">
+              <span class="label-char" style="--index: 0">N</span>
+              <span class="label-char" style="--index: 1">o</span>
+              <span class="label-char" style="--index: 2">m</span>
+              <span class="label-char" style="--index: 3">b</span>
+              <span class="label-char" style="--index: 4">r</span>
+              <span class="label-char" style="--index: 5">e</span>
+              <span class="label-char" style="--index: 6">ㅤ</span>
+              <span class="label-char" style="--index: 7">d</span>
+              <span class="label-char" style="--index: 8">e</span>
+              <span class="label-char" style="--index: 9">ㅤ</span>
+              <span class="label-char" style="--index: 10">L</span>
+              <span class="label-char" style="--index: 11">o</span>
+              <span class="label-char" style="--index: 12">c</span>
+              <span class="label-char" style="--index: 13">i</span>
+              <span class="label-char" style="--index: 14">ó</span>
+              <span class="label-char" style="--index: 15">n</span>
+            </label>
+          </div>
+          
+          <div class="wave-group">
+            <input id="costPrice" required type="number" class="input" />
+            <span class="bar"></span>
+            <label class="label">
+              <span class="label-char" style="--index: 0">P</span>
+              <span class="label-char" style="--index: 1">r</span>
+              <span class="label-char" style="--index: 2">e</span>
+              <span class="label-char" style="--index: 3">c</span>
+              <span class="label-char" style="--index: 4">i</span>
+              <span class="label-char" style="--index: 5">o</span>
+              <span class="label-char" style="--index: 6">ㅤ</span>
+              <span class="label-char" style="--index: 7">d</span>
+              <span class="label-char" style="--index: 8">e</span>
+              <span class="label-char" style="--index: 9">ㅤ</span>
+              <span class="label-char" style="--index: 10">C</span>
+              <span class="label-char" style="--index: 11">o</span>
+              <span class="label-char" style="--index: 12">s</span>
+              <span class="label-char" style="--index: 13">t</span>
+              <span class="label-char" style="--index: 14">o</span>
+            </label>
+          </div>
+          
+          <div class="wave-group">
+            <input id="salePrice" required type="number" class="input" />
+            <span class="bar"></span>
+            <label class="label">
+              <span class="label-char" style="--index: 0">P</span>
+              <span class="label-char" style="--index: 1">r</span>
+              <span class="label-char" style="--index: 2">e</span>
+              <span class="label-char" style="--index: 3">c</span>
+              <span class="label-char" style="--index: 4">i</span>
+              <span class="label-char" style="--index: 5">o</span>
+              <span class="label-char" style="--index: 6">ㅤ</span>
+              <span class="label-char" style="--index: 7">d</span>
+              <span class="label-char" style="--index: 8">e</span>
+              <span class="label-char" style="--index: 9">ㅤ</span>
+              <span class="label-char" style="--index: 10">V</span>
+              <span class="label-char" style="--index: 11">e</span>
+              <span class="label-char" style="--index: 12">n</span>
+              <span class="label-char" style="--index: 13">t</span>
+              <span class="label-char" style="--index: 14">a</span>
+            </label>
+          </div>
+
+          <div class="buttons">
+            <button type="button" id="saveProduct">Guardar</button>
+            <button type="button" id="updateProduct" style="display: none">Actualizar</button>
+            <button type="button" id="cancelUpdate" style="display: none">Cancelar</button>
+            <button type="button" id="deleteProduct" style="display: none">Eliminar</button>
+          </div>
+        </form>
+      </div>
+
+      <!-- Listado de Productos -->
+      <div class="list-container">
+        <h2>PRODUCTOS</h2>
+        <ul id="productsList" class="products-list">
+          <!-- Aquí se agregarán dinámicamente los productos -->
+        </ul>
+      </div>
+    </div>
+
+    <script src="productos.js" type="module"></script>
+  </body>
+</html>

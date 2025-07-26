@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inventario</title>
+    <link rel="stylesheet" href="css/dashboard.css">
+
+    <style>
+        /* Estilos para la lista de productos */
+        .products-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 25px;
+            padding: 20px;
+            list-style: none;
+        }
+
+        /* Estilo para cada elemento de producto */
+        .products-list li {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            text-align: left;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            color: #ffffff;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .products-list li:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Estilo para la información del producto */
+        .product-info {
+            padding: 20px 20px 10px;
+        }
+
+        .product-info h3 {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: var(--primary-color);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding-bottom: 10px;
+        }
+
+        .product-details {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .price-tag {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 5px 0;
+        }
+
+        .price-label {
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .price-value {
+            font-size: 16px;
+            font-weight: 600;
+            color: white;
+        }
+
+        .profit .price-value {
+            color: #20E3B2;
+        }
+
+        /* Botones dentro de cada producto */
+        .buttons-container {
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+            padding: 15px 20px;
+            background: rgba(0, 0, 0, 0.15);
+            margin-top: 10px;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .buttons-container button {
+            flex: 1;
+            padding: 10px;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .edit {
+            background-color: rgba(114, 134, 253, 0.2);
+            color: white;
+            border: 1px solid rgba(114, 134, 253, 0.5);
+        }
+
+        .edit:hover {
+            background-color: rgba(114, 134, 253, 0.4);
+        }
+
+        .sell {
+            background-color: rgba(32, 227, 178, 0.2);
+            color: white;
+            border: 1px solid rgba(32, 227, 178, 0.5);
+        }
+
+        .sell:hover {
+            background-color: rgba(32, 227, 178, 0.4);
+        }
+
+        .sold {
+            background-color: rgba(32, 227, 178, 0.6);
+            cursor: not-allowed;
+        }
+
+        .error {
+            background-color: rgba(255, 69, 58, 0.6);
+        }
+
+        .btn-icon {
+            font-size: 16px;
+        }
+
+        /* Estilos para el mensaje vacío */
+        .empty-message {
+            color: #FFFFFF;
+            font-size: 16px;
+            text-align: center;
+            grid-column: 1 / -1;
+            padding: 30px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+        }
+
+        .error-message {
+            color: #FF453A;
+            font-size: 16px;
+            text-align: center;
+            grid-column: 1 / -1;
+            padding: 30px;
+            background: rgba(255, 69, 58, 0.1);
+            border-radius: 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .error-icon {
+            font-size: 32px;
+        }
+
+        #searchInput {
+            width: 100%;
+            max-width: 500px;
+            margin: 20px auto;
+            padding: 12px 20px;
+            border-radius: 15px;
+            background: rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: white;
+            font-size: 16px;
+            display: block;
+            transition: all 0.3s ease;
+        }
+
+        #searchInput:focus {
+            box-shadow: 0 0 0 3px rgba(114, 134, 253, 0.2);
+            border-color: var(--primary-color);
+            outline: none;
+        }
+
+        #totalProductsContainer {
+            background: rgba(114, 134, 253, 0.1);
+            border-radius: 15px;
+            padding: 15px;
+            margin: 20px auto;
+            max-width: 500px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            border: 1px solid rgba(114, 134, 253, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        #totalProductsContainer:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+        }
+
+        #totalProductsContainer h2 {
+            margin: 0;
+            color: var(--primary-color);
+            font-size: 20px;
+        }
+
+        #totalProducts {
+            font-weight: bold;
+            color: white;
+        }
+    </style>
+    <script src="loader.js"></script>
+
+</head>
+<body>
+    <div id="totalProductsContainer">
+        <h2>📦 Total productos: <span id="totalProducts">0</span></h2>
+    </div>
+
+    <input type="text" id="searchInput" placeholder="🔍 Buscar producto por nombre..." />
+
+    <div id="inventario" class="container">
+        <div class="navbar-wrapper">
+            <div class="backdrop" id="backdrop"></div>
+          
+            
+            <nav class="navbar-menu" id="navbar">
+              <button class="menu-toggle" id="menuToggle">☰</button>
+              <div class="menu-items" id="menuItems">
+                <a href="categories.html" >agregar cliente</a>
+                <a href="abonos.html" >Historial de abonos</a>
+                <a href="liquidados.html">Liquidados</a>
+                <a href="productos.html">Agregar Producto</a>          <a href="categories.html">Registro</a>
+                <a href="categories.html">registrar cliente</a>
+                <a href="vendidos.html">Productos Vendidos</a>
+               
+                
+              </div>
+              
+            </nav>
+          </div>
+      
+
+        <div class="list-container">
+            <h1>Inventario de Productos</h1>
+            <ul id="productsList" class="products-list"></ul>
+        </div>
+    </div>
+
+    <script type="module" src="inventario.js"></script>
+</body>
+</html>

@@ -4,18 +4,52 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Historial de Ventas</title>
-    <link rel="stylesheet" href="css/styles.css">
-    
+    <link rel="stylesheet" href="css/dashboard.css">
+    <script src="loader.js"></script>
 </head>
 <body>
 
-    <input type="text" id="searchInput" placeholder="🔍 Buscar cliente por nombre..." />
+    <div id="totalDebtContainer">
+        <h2>💰 Te deben: <span id="totalDebt">0</span> </h2>
+    </div>
 
     <div id="historial" class="container">
+
+      
+        <div class="navbar-wrapper">
+            <div class="backdrop" id="backdrop"></div>
+          
+            
+            <nav class="navbar-menu" id="navbar">
+              <button class="menu-toggle" id="menuToggle">☰</button>
+              <div class="menu-items" id="menuItems">
+                <a href="categories.html" >agregar cliente</a>
+                
+                <a href="liquidados.html">Liquidados</a>
+                <a href="productos.html">Agregar Producto</a>          <a href="categories.html">Registro</a>
+                <a href="inventario.html">Inventario</a>
+                <a href="vendidos.html">Productos Vendidos</a>
+               
+                
+              </div>
+              
+            </nav>
+          </div>
+      
+          
+      
+          <div class="busqueda-centrada" >
+            <input type="text" id="searchInput" placeholder="🔍 Buscar cliente por nombre..." />
+    
+            <input type="date" id="dateFilter" class="date-filter" />
+        </div>
+
         <h1>Historial de Ventas</h1>
 
         <ul id="salesHistory" class="sales-list"></ul>
     </div>
+
+
 
     <script type="module" src="historial.js"></script>
 </body>
